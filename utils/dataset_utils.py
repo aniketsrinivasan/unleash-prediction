@@ -4,6 +4,14 @@ import pandas as pd
 # data_read_csv(filename, verbose=False) reads a given .csv file and returns a variable containing
 #   a pd.DataFrame of that file.
 def data_read_csv(path: str, verbose=True) -> pd.DataFrame:
+    """
+    Reads data from a .csv file and returns a pd.DataFrame of that file.
+
+    :param path:        path to the .csv file.
+    :param verbose:     prints debugging information.
+    :return:            pd.DataFrame.
+    """
+
     if verbose:
         print(f'Reading file from {path}.')
     file = pd.read_csv(path)
@@ -15,6 +23,16 @@ def data_read_csv(path: str, verbose=True) -> pd.DataFrame:
 # Saves in the new pd.DataFrame under the attribute "datetime_name".
 def data_datetime_conversion(dataframe: pd.DataFrame, datetime_name: str,
                              datetime_format: str, verbose=True) -> pd.DataFrame:
+    """
+    Converts the date/time column of a dataframe into the DateTime format (understood by Pandas).
+
+    :param dataframe:           dataframe to sort.
+    :param datetime_name:       name of the date/time column in dataframe.
+    :param datetime_format:     format of the date/time (e.g. "%Y-%m-%d %H:%M:%S").
+    :param verbose:             prints debugging information.
+    :return:                    pd.DataFrame.
+    """
+
     if verbose:
         print(f'Converting {datetime_name} in {dataframe} to DateTime format.')
     dataframe_new = dataframe.copy()
@@ -24,6 +42,15 @@ def data_datetime_conversion(dataframe: pd.DataFrame, datetime_name: str,
 
 # data_datetime_sort(dataframe, datetime_name, verbose) consumes a dataframe and sorts it by datetime.
 def data_datetime_sort(dataframe: pd.DataFrame, datetime_name: str, verbose=True) -> pd.DataFrame:
+    """
+    Consumes a dataframe and sorts by datetime_name.
+
+    :param dataframe:           the dataframe to sort.
+    :param datetime_name:       name of the DateTime column in dataframe.
+    :param verbose:             prints debugging information.
+    :return:                    pd.DataFrame (sorted by datetime_name).
+    """
+
     if verbose:
         print(f'Sorting by {datetime_name} in {dataframe}.')
     dataframe_new = dataframe.copy()
@@ -41,6 +68,23 @@ def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str,
                                   days_of_month=False,
                                   months=False,
                                   verbose=True) -> tuple[pd.DataFrame, dict]:
+    """
+    Creates a set of time-series features (as columns) in the given pd.DataFrame.
+    Returns a modified dataframe, and a dictionary of features added in the following format:
+        {param: name_in_dataframe, ...}
+
+
+    :param dataframe:           dataframe to add time-series features to.
+    :param datetime_name:       name of the DateTime column in dataframe.
+    :param hours:               add the "hour" feature.
+    :param days_of_week:        add the "day of the week" feature.
+    :param weeks:               add the "week of the year" feature.
+    :param days_of_month:       add the "day of the month" feature.
+    :param months:              add the "month of the year" feature.
+    :param verbose:             prints debugging information.
+    :return:                    tuple of pd.DataFrame, dictionary of features.
+    """
+
     if verbose:
         print(f'Creating DateTime features.')
     dataframe_new = dataframe.copy()
@@ -84,6 +128,19 @@ def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str,
 def data_create_lags(dataframe: pd.DataFrame, value_name: str,
                      lag_base: int, lag_multiples: list[int], lag_label="",
                      verbose=True) -> tuple[pd.DataFrame, int]:
+    """
+    Creates lagged column(s) of value_name using lag_base (representing the "unit" to lag by) and
+    lag_multiples (a list of how many units each column should be lagged by). Unfilled values are NaN.
+
+    :param dataframe:       dataframe to create lags using.
+    :param value_name:      name of column to lag.
+    :param lag_base:        integer "base" unit to lag by (number of entries).
+    :param lag_multiples:   list of multiples to lag by.
+    :param lag_label:       the label for lag_base (e.g "week").
+    :param verbose:         prints debugging information.
+    :return:                tuple of pd.DataFrame, minimum lag (number of entries).
+    """
+
     if verbose:
         print("Creating lags in dataset...")
 
@@ -101,6 +158,17 @@ def data_create_lags(dataframe: pd.DataFrame, value_name: str,
 #   labels:         contains only value_name (labels)
 # and returns both as a tuple.
 def data_split_features_labels(dataframe: pd.DataFrame, value_name: str, verbose=True) -> tuple:
+    """
+    Splits the dataframe into two parts:
+        training set:   (training) contains everything except the column value_name;
+        labels:         (labels) contains only column value_name.
+
+    :param dataframe:       dataframe to split.
+    :param value_name:      the column to split using.
+    :param verbose:         prints debugging information.
+    :return:                tuple of pd.DataFrame in the order (training, labels)
+    """
+
     if verbose:
         print("Splitting dataset into training and testing.")
     X_data = dataframe.drop([value_name], axis=1).copy()
@@ -111,6 +179,15 @@ def data_split_features_labels(dataframe: pd.DataFrame, value_name: str, verbose
 # data_split_train_test_valid(dataframe, ratio, verbose) takes pd.DataFrame, a list of floats representing
 #   ratios (for train/test/valid respectively), and returns three pd.DataFrames (split accordingly).
 def data_split_train_test_valid(dataframe: pd.DataFrame, ratio: list[float], verbose=True):
+    """
+    Splits a dataframe into three parts (training, testing, validation) based on ratios.
+
+    :param dataframe:       pd.DataFrame to split.
+    :param ratio:           a list of floats (adding to 1) for split ratios (train, test, valid).
+    :param verbose:         prints progress to console.
+    :return:                triple of pd.DataFrame split in the order (train, test, valid).
+    """
+
     if sum(ratio) != 1:
         raise ValueError("Ratios must sum to 1.")
     if verbose:
@@ -135,6 +212,19 @@ def data_split_train_test_valid(dataframe: pd.DataFrame, ratio: list[float], ver
 # Requires:     dataframe is sorted by datetime_name, which is in DateTime format
 def data_create_future(dataframe, datetime_name: str, value_name: str,
                        window_size: int, step="1h", append=True, verbose=True):
+    """
+    Consumes a pd.DataFrame, and creates a "future" DataFrame of the DateTime and Target columns.
+
+    :param dataframe:       input dataframe.
+    :param datetime_name:   name of DateTime column in dataframe.
+    :param value_name:      name of Target column in dataframe.
+    :param window_size:     number of entries to create in the future.
+    :param step:            the step size to create future DateTime column.
+    :param append:          whether to append to the original dataframe.
+    :param verbose:         prints progress to console.
+    :return:                pd.DataFrame for the future.
+    """
+
     if verbose: print(f"Creating future of size {window_size} with step {step}.")
     # Copying the existing dataframe and finding the last timestamp:
     dataframe_new = dataframe.copy()
