@@ -127,7 +127,7 @@ def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str,
 # Returns a modified pd.DataFrame and the minimum lag quantity (in entries) used.
 def data_create_lags(dataframe: pd.DataFrame, value_name: str,
                      lag_base: int, lag_multiples: list[int], lag_label="",
-                     verbose=True) -> tuple[pd.DataFrame, int]:
+                     verbose=True) -> tuple[pd.DataFrame, int, list]:
     """
     Creates lagged column(s) of value_name using lag_base (representing the "unit" to lag by) and
     lag_multiples (a list of how many units each column should be lagged by). Unfilled values are NaN.
@@ -138,11 +138,14 @@ def data_create_lags(dataframe: pd.DataFrame, value_name: str,
     :param lag_multiples:   list of multiples to lag by.
     :param lag_label:       the label for lag_base (e.g "week").
     :param verbose:         prints debugging information.
-    :return:                tuple of pd.DataFrame, minimum lag (number of entries).
+    :return:                tuple of pd.DataFrame, minimum lag (number of entries), list of lags (strings).
     """
 
     if verbose:
         print("Creating lags in dataset...")
+
+    # Creating a list of the column names for all the lag columns created:
+    lags = [f"lag_{multiple}{lag_label}" for multiple in lag_multiples]
 
     max_lag = max(lag_multiples) * lag_base
     if max_lag > dataframe.shape[0]:
@@ -150,7 +153,7 @@ def data_create_lags(dataframe: pd.DataFrame, value_name: str,
     dataframe_new = dataframe.copy()
     for lag_multiplier in lag_multiples:
         dataframe_new[f"lag_{lag_multiplier}{lag_label}"] = dataframe_new[value_name].shift(lag_multiplier * lag_base)
-    return dataframe_new, min(lag_multiples)*lag_base
+    return dataframe_new, min(lag_multiples)*lag_base, lags
 
 
 # data_split_features_labels(dataframe, value_name, verbose) splits the dataset into:
@@ -213,7 +216,7 @@ def data_split_train_test_valid(dataframe: pd.DataFrame, ratio: list[float], ver
 def data_create_future(dataframe, datetime_name: str, value_name: str,
                        window_size: int, step="1h", append=True, verbose=True):
     """
-    Consumes a pd.DataFrame, and creates a "future" DataFrame of the DateTime and Target columns.
+    Consumes a pd.DataFrame, and creates a "future" DataFrame of (only) the DateTime and Target columns.
 
     :param dataframe:       input dataframe.
     :param datetime_name:   name of DateTime column in dataframe.
