@@ -4,6 +4,16 @@ from .dataset_utils import *
 class TimeSeries:
     def __init__(self, csv_path: str, datetime_name: str, datetime_format: str,
                  value_name: str, verbose=True):
+        """
+        Initializes a TimeSeries object, used for managing time-series data to pass into models.
+
+        :param csv_path:            path to the .csv file containing the data.
+        :param datetime_name:       name of the datetime column (str).
+        :param datetime_format:     format of the datetime column (str) (e.g. "%Y-%m-%d %H:%M:%S").
+        :param value_name:          name of the value column (str).
+        :param verbose:             prints debugging information.
+        """
+
         self.verbose = verbose
 
         # Initializing the "raw" dataframe (read directly from the .csv):
@@ -46,7 +56,9 @@ class TimeSeries:
                                                              else "not created."}
             features:               {self.features}
             lags:                   {self.lags}
-            lag_min:                {self.lag_min}
+            lag_min:                {self.lag_min} (entries)
+            
+            split_ratio:            {self.split_ratio} (train/test/valid)
         '''
         return string
 
@@ -58,6 +70,8 @@ class TimeSeries:
     #   * the dataframe is sorted by DateTime
     #   * time-series features are created (based on kwargs_features)
     #   * time-series lags are created (based on kwargs_lags)
+    # NOTE: implement interpolation methods during initial augmentation for missing values?
+    #       (find some way to deal w/ missing values basically).
     def df_augment(self, custom_df=None, update_self=True, override=False,
                    kwargs_features=None, kwargs_lags=None):
         """
@@ -127,7 +141,7 @@ class TimeSeries:
         # Storing all the information from this process:
         if update_self:
             self.df_augmented = df_augmented.copy()
-            self.features = features
+            self.features = list(features.values())
             self.lags = lags
             self.lag_min = lag_min
             return

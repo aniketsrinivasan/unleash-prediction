@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Added TimeSeries class.">
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Added overriding and TimeSeries.prepare_from_scratch().">
+      <change afterPath="$PROJECT_DIR$/models/master_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/model_XGBoostCV_v1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/model_XGBoostTTV_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/dataset_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
@@ -70,7 +75,8 @@
       <workItem from="1717765547812" duration="11682000" />
       <workItem from="1717841363008" duration="1725000" />
       <workItem from="1718134287269" duration="12544000" />
-      <workItem from="1718207253478" duration="4827000" />
+      <workItem from="1718207253478" duration="5074000" />
+      <workItem from="1718286649323" duration="10653000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -96,7 +102,23 @@
       <option name="project" value="LOCAL" />
       <updated>1718205166581</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Modified functionality.">
+      <option name="closed" value="true" />
+      <created>1718212209038</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1718212209038</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Added overriding and TimeSeries.prepare_from_scratch().">
+      <option name="closed" value="true" />
+      <created>1718212242617</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1718212242617</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -106,6 +128,8 @@
     <MESSAGE value="Initial commit." />
     <MESSAGE value="Added docstrings for functions." />
     <MESSAGE value="Added TimeSeries class." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added TimeSeries class." />
+    <MESSAGE value="Modified functionality." />
+    <MESSAGE value="Added overriding and TimeSeries.prepare_from_scratch()." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added overriding and TimeSeries.prepare_from_scratch()." />
   </component>
 </project>
