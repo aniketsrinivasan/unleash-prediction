@@ -1,4 +1,5 @@
 import pandas as pd
+import math
 
 
 # data_read_csv(filename, verbose=False) reads a given .csv file and returns a variable containing
@@ -14,8 +15,7 @@ def data_read_csv(path: str, verbose=True) -> pd.DataFrame:
 
     if verbose:
         print(f'Reading file from {path}.')
-    file = pd.read_csv(path)
-    return file
+    return pd.read_csv(path)
 
 
 # data_datetime_conversion(dataframe, datetime_name, datetime_format, verbose) converts the datetime column
@@ -191,8 +191,8 @@ def data_split_train_test_valid(dataframe: pd.DataFrame, ratio: list[float], ver
     :return:                triple of pd.DataFrame split in the order (train, test, valid).
     """
 
-    if sum(ratio) != 1:
-        raise ValueError("Ratios must sum to 1.")
+    if int(math.fsum(ratio)) != 1:
+        raise ValueError(f"Ratios must sum to 1. Current sum: {int(math.fsum(ratio))}.")
     if verbose:
         print("Splitting dataset into training, testing and validation.")
     dataset_len = dataframe.shape[0]
