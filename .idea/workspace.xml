@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Removed old models.">
-      <change afterPath="$PROJECT_DIR$/models/xgboost/__init__.py" afterDir="false" />
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated commit.">
+      <change afterPath="$PROJECT_DIR$/models/model_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/model_XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/xgboost/model_XGBoostCV_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/model_XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/xgboost/model_XGBoostTTV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/master_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/xgboost/model_XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/xgboost/model_XGBoostCV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/xgboost/model_XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/xgboost/model_XGBoostTTV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +56,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/models/xgboost" />
+    </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -72,7 +79,8 @@
       <workItem from="1717841363008" duration="1725000" />
       <workItem from="1718134287269" duration="12544000" />
       <workItem from="1718207253478" duration="5074000" />
-      <workItem from="1718286649323" duration="11025000" />
+      <workItem from="1718286649323" duration="11604000" />
+      <workItem from="1718360723659" duration="9966000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -154,7 +162,23 @@
       <option name="project" value="LOCAL" />
       <updated>1718308410044</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Restructured directories.">
+      <option name="closed" value="true" />
+      <created>1718308569760</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1718308569760</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1718308601230</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1718308601230</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -169,8 +193,19 @@
     <MESSAGE value="Minor debugging." />
     <MESSAGE value="Implemented MasterModel parent class." />
     <MESSAGE value="Implemented XGBoost models." />
-    <MESSAGE value="Updated commit." />
     <MESSAGE value="Removed old models." />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed old models." />
+    <MESSAGE value="Restructured directories." />
+    <MESSAGE value="Updated commit." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated commit." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/__init__.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
