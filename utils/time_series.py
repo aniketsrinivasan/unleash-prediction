@@ -41,6 +41,10 @@ class TimeSeries:
         self.df_future_only = None
         self.df_future_concat = None
 
+        # Initializing prediction dataframe(s) and information:
+        self.df_future_predictions = None       # DataFrame containing past info and future predictions
+        self.isfuture_name = None               # name of mask column isFuture (as column name)
+
     # When the object is called using print() or otherwise (representation).
     def __repr__(self):
         string = f'''
@@ -247,3 +251,11 @@ class TimeSeries:
         self.df_create_future(window_size=future_window_size, step_size=future_step_size,
                               kwargs_features=kwargs_features, kwargs_lags=kwargs_lags)
         return
+
+    def set_validation_info(self, validation_df: pd.DataFrame):
+        """
+        Function used to store validation information in the TimeSeries.
+
+        :param validation_df:
+        :return:
+        """

@@ -9,13 +9,13 @@ from models import MasterModel
 class XGBoostCV_v1(MasterModel):
     # Cross-Validation hyperparameters:
     #   Number of splits to use for cross-validation:
-    __SPLITS = 10
+    __SPLITS = 11
     #   Number of estimator (trees) to use:
-    __N_ESTIMATORS = 500
+    __N_ESTIMATORS = 600
     #   Early stopping rounds:
     __EARLY_STOPPING = 300
     #   Maximum (tree) depth:
-    __MAX_DEPTH = 3
+    __MAX_DEPTH = 4
     #   Learning rate for regressor:
     __LEARNING_RATE = 0.01
     #   Loss function for regressor (as per XGBoostRegressor):
@@ -29,6 +29,7 @@ class XGBoostCV_v1(MasterModel):
         :param time_series:     the TimeSeries to model.
         """
         super().__init__(time_series, "XGBoostCV_v1")
+        self.model_name = "XGBoostCV_v1"
         # Creating a TimeSeriesSplit (for cross-validation) with default test_size (gap 0):
         self.time_series_split = TimeSeriesSplit(n_splits=self.__SPLITS)
 
@@ -72,10 +73,16 @@ class XGBoostCV_v1(MasterModel):
             X_test = test[self.features]
             y_test = test[self.target]
 
+            # Setting verbose value:
+            if self.time_series.verbose:
+                verbose = 100
+            else:
+                verbose = False
+
             # Fitting regressor to dataset:
             regressor.fit(X_train, y_train,
                           eval_set=[(X_train, y_train), (X_test, y_test)],
-                          verbose=100)
+                          verbose=verbose)
 
             # Storing the training information:
             #   y_pred:     prediction of regressor in the testing set.
@@ -92,12 +99,13 @@ class XGBoostCV_v1(MasterModel):
         self.predictions = predictions
         return
 
-    def predict(self):
+    def predict(self, custom_df=None):
         """
         Fits the model onto the future data in the TimeSeries using the trained model.
         Requires that the model has been trained via the train() method first.
 
-        :return:        predictions of the model.
+        :param: custom_df:      predict on a custom dataset. must be prepared using TimeSeries.df_create_future()
+        :return:                predictions of the model.
         """
         if self.regressor is None:
             raise Exception(f"Regressor has not been trained yet.")
@@ -106,8 +114,11 @@ class XGBoostCV_v1(MasterModel):
             print(f"SoftWarn: Future window size ({self.time_series.df_future_only.shape[0]}) is larger than"
                   f"the smallest lag ({self.time_series.lag_min}).")
 
-        # Filling all NaN values with 0 (if they exist):
-        future_dataset = self.time_series.df_future_only.fillna(0)
+        # Filling all NaN values with 0 (if they exist), initializing dataset:
+        if custom_df is not None:
+            future_dataset = custom_df.fillna(0).copy()
+        else:
+            future_dataset = self.time_series.df_future_only.fillna(0).copy()
         # Dropping DateTime column (the predictor does not accept the pd.datetime64 format) and
         #   the Target column (this is what the model is trying to predict):
         future_dataset = future_dataset.drop(columns=[self.time_series.datetime_name,

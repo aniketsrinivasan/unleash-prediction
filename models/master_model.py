@@ -33,4 +33,3 @@ class MasterModel:
         self.features = time_series.features + time_series.lags
         # Target to predict (as a column name):
         self.target = time_series.value_name
-

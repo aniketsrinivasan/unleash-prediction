@@ -1,6 +1,7 @@
 import numpy as np
 import xgboost as xgb
 from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
 from utils import TimeSeries
 from models import MasterModel
 
@@ -57,9 +58,16 @@ class XGBoostTTV_v1(MasterModel):
         X_test = self.time_series.df_split_test[self.features]
         y_test = self.time_series.df_split_test[self.target]
 
+        # Setting verbose value:
+        if self.time_series.verbose:
+            verbose = 100
+        else:
+            verbose = False
+
+        # Fitting regressor to dataset:
         regressor.fit(X_train, y_train,
-                      eval_set=[(X_train, y_train)],
-                      verbose=100)
+                      eval_set=[(X_train, y_train), (X_test, y_test)],
+                      verbose=verbose)
 
         # Storing the training information:
         #   y_pred:     prediction of regressor in the testing set.
@@ -76,12 +84,16 @@ class XGBoostTTV_v1(MasterModel):
         self.predictions = predictions
         return
 
-    def predict(self):
+    def predict(self, custom_df=None):
         """
-        Fits the model onto the future data in the TimeSeries using the trained model.
+        Fits the model onto the future data in the TimeSeries using the trained model (by default)
         Requires that the model has been trained via the train() method first.
 
-        :return:        predictions of the model.
+        If using the custom_df parameter, this dataframe must be created in the same format as the
+        default prediction dataframe. Namely, custom_df must have ALL feature columns, the DateTime AND Target column.
+
+        :param: custom_df:      predict on a custom dataset. must be prepared using TimeSeries.df_create_future()
+        :return:                predictions of the model.
         """
         if self.regressor is None:
             raise Exception(f"Regressor has not been trained yet.")
@@ -90,12 +102,18 @@ class XGBoostTTV_v1(MasterModel):
             print(f"SoftWarn: Future window size ({self.time_series.df_future_only.shape[0]}) is larger than"
                   f"the smallest lag ({self.time_series.lag_min}).")
 
-        # Filling all NaN values with 0 (if they exist):
-        future_dataset = self.time_series.df_future_only.fillna(0)
+        # Filling all NaN values with 0 (if they exist), initializing dataset:
+        if custom_df is not None:
+            future_dataset = custom_df.fillna(0).copy()
+        else:
+            future_dataset = self.time_series.df_future_only.fillna(0).copy()
         # Dropping DateTime column (the predictor does not accept the pd.datetime64 format) and
         #   the Target column (this is what the model is trying to predict):
-        future_dataset = future_dataset.drop(columns=[self.time_series.datetime_name,
-                                                      self.time_series.value_name])
+        try:
+            future_dataset = future_dataset.drop(columns=[self.time_series.datetime_name,
+                                                          self.time_series.value_name])
+        except IndexError:
+            pass
         # Making prediction:
         prediction = self.regressor.predict(future_dataset)
 
