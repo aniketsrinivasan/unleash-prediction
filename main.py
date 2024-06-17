@@ -1,38 +1,45 @@
 from model_framework import *
 from utils import TimeSeries
 
+# ~~~~~~~~~~~~~~~~~ HYPERPARAMETERS AND OTHER INFO ~~~~~~~~~~~~~~~~~
+#                           FOR THE USER
 
-# To modify, for the user:
-__kwargs_features = dict(
-    hours=True,
-    days_of_week=True,
-    weeks=True,
-    days_of_month=False,
-    months=False
-)
-
-__lag_base = 24
-__lag_multiples = [1, 7, 7*4, 7*12, 7*54]
-__lag_label = "d"
-__kwargs_lags = dict(
-    lag_base=__lag_base,
-    lag_multiples=__lag_multiples,
-    lag_label=__lag_label
-)
-
+# =========================  PARAMETERS  ===========================
+# Initialization parameters for the TimeSeries object:
 __kwargs_timeseries_init = dict(
     csv_path="/Users/aniket/PycharmProjects/unleashPredictions/energy_data.csv",
     datetime_name="Datetime",
     datetime_format="%Y-%m-%d %H:%M:%S",
     value_name="PJMW_MW",
-    verbose=True
+    verbose=False,
 )
-
+# Initialization parameters for TimeSeries preparation:
 __kwargs_timeseries_prepare = dict(
     future_window_size=24*7*4,
     future_step_size="1h",
-    split_ratio=[0.9, 0.05, 0.05],
+    split_ratio=[0.9, 0.099, 0.001],
 )
+
+# =======================  HYPERPARAMETERS  ========================
+# Arguments to modify the creation of time-series features:
+__kwargs_features = dict(
+    hours=True,
+    days_of_week=True,
+    weeks=True,
+    days_of_month=True,
+    months=True,
+)
+# Arguments to modify the lag values created as features:
+__lag_base = 24*7
+__lag_multiples = [1, 3, 12, 54, 108]
+__lag_label = "w"
+__kwargs_lags = dict(
+    lag_base=__lag_base,
+    lag_multiples=__lag_multiples,
+    lag_label=__lag_label
+)
+# ==================================================================
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 def main():
@@ -51,7 +58,7 @@ def main():
     tester = ModelTester(__kwargs_timeseries_init, __kwargs_timeseries_prepare,
                          __kwargs_features, __kwargs_lags)
     tester.create_model_dict(train=False, validate=False)
-    tester.run_training()
+    tester.run_training(verbose=False)
     tester.run_validation(verbose=True)
     tester.get_validation_losses()
 

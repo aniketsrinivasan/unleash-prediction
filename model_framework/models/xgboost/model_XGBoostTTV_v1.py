@@ -7,7 +7,7 @@ from utils import TimeSeries
 class XGBoostTTV_v1:
     # Regression hyperparameters:
     __kwargs_hyperparams = dict(
-        base_score=6000,                # base "average" to build regression trees from
+        base_score=0.50,                # base "average" to build regression trees from
         booster='gbtree',               # the gradient booster used
         n_estimators=1000,              # number of estimators (trees)
         early_stopping_rounds=300,      # early stopping rounds if loss plateaus
@@ -97,9 +97,14 @@ class XGBoostTTV_v1:
         if self.regressor is None:
             raise Exception(f"Regressor has not been trained yet.")
         # If the future prediction window is larger than the smallest lag:
-        if self.time_series.df_future_only.shape[0] > self.time_series.lag_min:
-            print(f"SoftWarn: Future window size ({self.time_series.df_future_only.shape[0]}) is larger than"
-                  f"the smallest lag ({self.time_series.lag_min}).")
+        if custom_df is None:
+            if self.time_series.df_future_only.shape[0] > self.time_series.lag_min:
+                print(f"SoftWarn: Future window size ({self.time_series.df_future_only.shape[0]}) is larger than "
+                      f"the smallest lag ({self.time_series.lag_min}).")
+        else:
+            if custom_df.shape[0] > self.time_series.lag_min:
+                print(f"SoftWarn: Future window size ({custom_df.shape[0]}) is larger than "
+                      f"the smallest lag ({self.time_series.lag_min}).")
 
         # Filling all NaN values with 0 (if they exist), initializing dataset:
         if custom_df is not None:

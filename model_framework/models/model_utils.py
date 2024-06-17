@@ -17,7 +17,7 @@ def validation_loss(model, loss_function="mean_squared_error", verbose=True):
     #   this is the validation set pre-prediction (with only feature columns)
     df_prediction = model.time_series.df_split_valid.fillna(0).copy()
     # Running predictions on this dataset:
-    future_prediction = model.predict(df_prediction)
+    future_prediction = model.predict(custom_df=df_prediction)
     # Getting the validation dataset (labels)
     df_validation = model.time_series.df_split_valid.copy()
 
