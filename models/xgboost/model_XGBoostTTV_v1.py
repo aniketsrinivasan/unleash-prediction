@@ -1,12 +1,10 @@
 import numpy as np
 import xgboost as xgb
 from sklearn.metrics import mean_squared_error
-import matplotlib.pyplot as plt
 from utils import TimeSeries
-from models import MasterModel
 
 
-class XGBoostTTV_v1(MasterModel):
+class XGBoostTTV_v1:
     # Hyperparameters:
     #   Number of estimator (trees) to use:
     __N_ESTIMATORS = 1000
@@ -26,7 +24,12 @@ class XGBoostTTV_v1(MasterModel):
 
         :param time_series:     the TimeSeries to model.
         """
-        super().__init__(time_series, "XGBoostTTV_v1")
+        # Storing this TimeSeries:
+        self.time_series = time_series
+        # Creating a list of features (as column names) for the dataset:
+        self.features = time_series.features + time_series.lags
+        # Target to predict (as a column name):
+        self.target = time_series.value_name
 
         # Initializing a saved model with scores and cross-validation predictions:
         self.regressor = None

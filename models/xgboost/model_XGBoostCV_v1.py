@@ -3,10 +3,9 @@ import xgboost as xgb
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import mean_squared_error
 from utils import TimeSeries
-from models import MasterModel
 
 
-class XGBoostCV_v1(MasterModel):
+class XGBoostCV_v1:
     # Cross-Validation hyperparameters:
     #   Number of splits to use for cross-validation:
     __SPLITS = 11
@@ -28,7 +27,13 @@ class XGBoostCV_v1(MasterModel):
 
         :param time_series:     the TimeSeries to model.
         """
-        super().__init__(time_series, "XGBoostCV_v1")
+        # Storing this TimeSeries:
+        self.time_series = time_series
+        # Creating a list of features (as column names) for the dataset:
+        self.features = time_series.features + time_series.lags
+        # Target to predict (as a column name):
+        self.target = time_series.value_name
+
         self.model_name = "XGBoostCV_v1"
         # Creating a TimeSeriesSplit (for cross-validation) with default test_size (gap 0):
         self.time_series_split = TimeSeriesSplit(n_splits=self.__SPLITS)
