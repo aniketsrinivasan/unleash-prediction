@@ -24,20 +24,16 @@ def main():
                                   datetime_name="Datetime",
                                   datetime_format="%Y-%m-%d %H:%M:%S",
                                   value_name="PJMW_MW",
-                                  verbose=False)
+                                  verbose=True)
 
-    kwargs_timeseries_prepare = dict(csv_path="/Users/aniket/PycharmProjects/unleashPredictions/energy_data.csv",
-                                     datetime_name="Datetime",
-                                     datetime_format="%Y-%m-%d %H:%M:%S",
-                                     value_name="PJMW_MW",
-                                     verbose=False)
+    kwargs_timeseries_prepare = dict(future_window_size=24*7*4,
+                                     future_step_size="1h",
+                                     split_ratio=[0.9, 0.05, 0.05],
+                                     kwargs_features=None,
+                                     kwargs_lags=None)
 
     tester = ModelTester(kwargs_timeseries_init, kwargs_timeseries_prepare)
-
-    model = MasterModel(time_series=time_series, model_name="XGBoostCV_v1")
-    model.model_create()
-    model.model_train()
-    model.model_get_validation_loss()
+    tester.create_model_dict(train=True, validate=True)
 
     # model = XGBoostTTV_v1(time_series=time_series)
     # model.train()

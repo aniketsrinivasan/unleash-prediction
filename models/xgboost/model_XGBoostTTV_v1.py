@@ -31,6 +31,8 @@ class XGBoostTTV_v1:
         # Target to predict (as a column name):
         self.target = time_series.value_name
 
+        self.model_name = "XGBoostTTV_v1"
+
         # Initializing a saved model with scores and cross-validation predictions:
         self.regressor = None
         self.scores = None

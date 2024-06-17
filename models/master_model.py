@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 from .xgboost import *
-from .model_tester import validation_loss
 from utils import TimeSeries
+from .model_utils import validation_loss
 
 
 class MasterModel:
@@ -16,7 +16,8 @@ class MasterModel:
     #   time_series.future_<>:          dataset onto which the model predicts (depending on model).
     def __init__(self, time_series: TimeSeries, model_name: str, read_stub=False, stub_path=None):
         """
-        MasterModel uses a TimeSeries, and a provided model, to train and forecast.
+        MasterModel uses a TimeSeries, and a provided model name, to create a Model of that type.
+        This acts as a wrapper function to all the Model classes defined.
 
         :param time_series:     TimeSeries object [must be fully prepared, use prepare_from_scratch()].
         :param model_name:      the model used, as a str; currently supports: "...".
@@ -70,21 +71,29 @@ class MasterModel:
         return self.model.predict(custom_df)
 
     def model_get_validation_loss(self, loss_function="mean_squared_error", verbose=True):
+        """
+        Gets the validation loss of the model on the TimeSeries data of this instance. Saves the information in
+        the object.
+
+        :param loss_function:       the loss metric to use.
+        :param verbose:             prints debugging information.
+        :return:                    tuple[float (loss), pd.DataFrame (validation dataframe)]
+        """
         self.model_validation_loss, self.model_validation_dataframe = validation_loss(self.model,
                                                                                       loss_function=loss_function,
                                                                                       verbose=verbose)
         return self.model_validation_loss, self.model_validation_dataframe
 
     def model_get_dict(self):
-        # {model_name: {"model": Model(trained),
-        #               #                 "validation_loss": 103934,
-        #               #                 "hyperparameters": {<dictionary of hyperparameters>},
-        #               #                 "predictions": predictions (as a list)}
+        """
+        Creates a dictionary containing information about the MasterModel:
+            {"model": Model, "hyperparameters": ..., "validation_loss": ..., "validation_df": ...,}
+
+        :return:        dict() of MasterModel information.
+        """
         model_dict = dict()
         model_dict["model"] = self.model
         model_dict["hyperparameters"] = self.model_kwargs
         model_dict["validation_loss"] = self.model_validation_loss
         model_dict["validation_df"] = self.model_validation_dataframe
         return model_dict
-
-
