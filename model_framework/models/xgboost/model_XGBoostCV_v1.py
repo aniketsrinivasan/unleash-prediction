@@ -6,19 +6,18 @@ from utils import TimeSeries
 
 
 class XGBoostCV_v1:
-    # Cross-Validation hyperparameters:
-    #   Number of splits to use for cross-validation:
-    __SPLITS = 11
-    #   Number of estimator (trees) to use:
-    __N_ESTIMATORS = 600
-    #   Early stopping rounds:
-    __EARLY_STOPPING = 300
-    #   Maximum (tree) depth:
-    __MAX_DEPTH = 4
-    #   Learning rate for regressor:
-    __LEARNING_RATE = 0.01
-    #   Loss function for regressor (as per XGBoostRegressor):
-    __LOSS_FUNCTION = "reg:squarederror"
+    # Regression hyperparameters:
+    __kwargs_hyperparams = dict(
+        base_score=6000,                # base "average" to build regression trees from
+        booster='gbtree',               # the gradient booster used
+        n_estimators=400,               # number of estimators (trees)
+        early_stopping_rounds=300,      # early stopping rounds if loss plateaus
+        objective="reg:squarederror",   # loss function to use
+        max_depth=4,                    # maximum (tree) depth
+        learning_rate=0.01              # learning rate for regressor
+    )
+    # Number of splits to use for cross-validation:
+    __SPLITS = 8
 
     def __init__(self, time_series: TimeSeries):
         """
@@ -53,12 +52,7 @@ class XGBoostCV_v1:
         :return:        None.
         """
         # Creating the Regressor model:
-        regressor = xgb.XGBRegressor(base_score=0.5, booster='gbtree',
-                                     n_estimators=self.__N_ESTIMATORS,
-                                     early_stopping_rounds=self.__EARLY_STOPPING,
-                                     objective=self.__LOSS_FUNCTION,
-                                     max_depth=self.__MAX_DEPTH,
-                                     learning_rate=self.__LEARNING_RATE)
+        regressor = xgb.XGBRegressor(**self.__kwargs_hyperparams)
 
         # Initializing predictions and scores:
         predictions = []

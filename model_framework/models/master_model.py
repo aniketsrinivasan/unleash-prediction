@@ -1,30 +1,39 @@
 import pandas as pd
 import numpy as np
 from .xgboost import *
-from utils import TimeSeries
 from .model_utils import validation_loss
+from utils import TimeSeries
 
 
 class MasterModel:
     # Here's how the TimeSeries data is used:
-    #   time_series.df_augmented:       typically unused, except for cross-validation models.
+    #   time_series.df_augmented:       typically unused, except for cross-validation model_framework.
     #   time_series.features:           used as features when predicting.
     #   time_series.lags:               used as features when predicting.
     #   time_series.lag_min:            used as a benchmark for the maximum recommended prediction window.
     #   time_series.value_name:         the Target to predict.
     #   time_series.df_split_<>:        splits used for training, testing and validation (depending on model).
     #   time_series.future_<>:          dataset onto which the model predicts (depending on model).
-    def __init__(self, time_series: TimeSeries, model_name: str, read_stub=False, stub_path=None):
+    def __init__(self, time_series: TimeSeries, model_name: str,
+                 read_from_stub=False, write_to_stub=False, stub_path=None):
         """
         MasterModel uses a TimeSeries, and a provided model name, to create a Model of that type.
         This acts as a wrapper function to all the Model classes defined.
 
         :param time_series:     TimeSeries object [must be fully prepared, use prepare_from_scratch()].
         :param model_name:      the model used, as a str; currently supports: "...".
+        :param read_from_stub:  whether to load the model from a stub (stub_path).
+        :param write_to_stub:   whether to save the model to a stub (stub_path).
+        :param stub_path:       the stub_path to load the model, or save the model.
         """
         # Storing the time_series and model_name:
         self.time_series = time_series
         self.model_name = model_name
+
+        # Storing information about reading from and writing to stubs:
+        self.read_from_stub = read_from_stub
+        self.write_to_stub = write_to_stub
+        self.stub_path = stub_path
 
         # Creating a list of features (as column names) for the dataset:
         self.features = time_series.features + time_series.lags
@@ -34,12 +43,13 @@ class MasterModel:
         # Storing information about the model:
         self.model = None                           # the actual Model object for this instance
         self.model_kwargs = None                    # storing any special arguments used
+        self.is_trained = False
         self.model_validation_loss = None           # validation loss
         self.model_validation_dataframe = None      # df_merged from validation loss
 
     def model_create(self):
         """
-        Initializes this model's Model and stores it in self.model.
+        Initializes this model's Model and stores it in self.model. Reads from stub if applicable.
 
         :return:    None.
         """
@@ -59,6 +69,7 @@ class MasterModel:
 
         :return:        None.
         """
+        self.is_trained = True
         return self.model.train()
 
     def model_predict(self, custom_df=None):

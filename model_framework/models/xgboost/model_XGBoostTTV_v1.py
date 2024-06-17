@@ -5,17 +5,16 @@ from utils import TimeSeries
 
 
 class XGBoostTTV_v1:
-    # Hyperparameters:
-    #   Number of estimator (trees) to use:
-    __N_ESTIMATORS = 1000
-    #   Early stopping rounds:
-    __EARLY_STOPPING = 300
-    #   Maximum (tree) depth:
-    __MAX_DEPTH = 3
-    #   Learning rate for regressor:
-    __LEARNING_RATE = 0.01
-    #   Loss function for regressor (as per XGBoostRegressor):
-    __LOSS_FUNCTION = "reg:squarederror"
+    # Regression hyperparameters:
+    __kwargs_hyperparams = dict(
+        base_score=6000,                # base "average" to build regression trees from
+        booster='gbtree',               # the gradient booster used
+        n_estimators=1000,              # number of estimators (trees)
+        early_stopping_rounds=300,      # early stopping rounds if loss plateaus
+        objective="reg:squarederror",   # loss function to use
+        max_depth=3,                    # maximum (tree) depth
+        learning_rate=0.01              # learning rate for regressor
+    )
 
     def __init__(self, time_series: TimeSeries):
         """
@@ -45,12 +44,7 @@ class XGBoostTTV_v1:
         :return:        None.
         """
         # Creating a regressor that takes in ALL the available data:
-        regressor = xgb.XGBRegressor(base_score=0.5, booster='gbtree',
-                                     n_estimators=self.__N_ESTIMATORS,
-                                     early_stopping_rounds=self.__EARLY_STOPPING,
-                                     objective=self.__LOSS_FUNCTION,
-                                     max_depth=self.__MAX_DEPTH,
-                                     learning_rate=self.__LEARNING_RATE)
+        regressor = xgb.XGBRegressor(**self.__kwargs_hyperparams)
 
         # Initializing predictions and scores:
         predictions = []
