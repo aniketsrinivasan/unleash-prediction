@@ -251,11 +251,3 @@ class TimeSeries:
         self.df_create_future(window_size=future_window_size, step_size=future_step_size,
                               kwargs_features=kwargs_features, kwargs_lags=kwargs_lags)
         return
-
-    def set_validation_info(self, validation_df: pd.DataFrame):
-        """
-        Function used to store validation information in the TimeSeries.
-
-        :param validation_df:
-        :return:
-        """

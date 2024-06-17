@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated commit.">
-      <change afterPath="$PROJECT_DIR$/models/model_tester.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/master_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/model_tester.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/xgboost/model_XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/xgboost/model_XGBoostCV_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/xgboost/model_XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/xgboost/model_XGBoostTTV_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
@@ -28,6 +29,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -80,7 +84,8 @@
       <workItem from="1718134287269" duration="12544000" />
       <workItem from="1718207253478" duration="5074000" />
       <workItem from="1718286649323" duration="11604000" />
-      <workItem from="1718360723659" duration="9966000" />
+      <workItem from="1718360723659" duration="12603000" />
+      <workItem from="1718483785181" duration="9567000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -178,7 +183,31 @@
       <option name="project" value="LOCAL" />
       <updated>1718308601230</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Modified model methods.">
+      <option name="closed" value="true" />
+      <created>1718388182945</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1718388182945</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Created testing framework.">
+      <option name="closed" value="true" />
+      <created>1718388262815</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1718388262815</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1718388303709</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1718388303709</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,6 +224,8 @@
     <MESSAGE value="Implemented XGBoost models." />
     <MESSAGE value="Removed old models." />
     <MESSAGE value="Restructured directories." />
+    <MESSAGE value="Modified model methods." />
+    <MESSAGE value="Created testing framework." />
     <MESSAGE value="Updated commit." />
     <option name="LAST_COMMIT_MESSAGE" value="Updated commit." />
   </component>
