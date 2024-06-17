@@ -1,5 +1,6 @@
 import pandas as pd
 import math
+import holidays
 
 
 # data_read_csv(filename, verbose=False) reads a given .csv file and returns a variable containing
@@ -61,12 +62,15 @@ def data_datetime_sort(dataframe: pd.DataFrame, datetime_name: str, verbose=True
 # data_datetime_create_features(dataframe, datetime_name) creates a set of features in the given pd.DataFrame.
 #   Requires that dataframe is sorted by DateTime.
 #   Returns a tuple:    modified pd.DataFrame, dictionary containing
-def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str,
+def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str, value_name: str,
                                   hours=True,
                                   days_of_week=True,
                                   weeks=True,
                                   days_of_month=False,
                                   months=False,
+                                  rolling_windows=None,
+                                  holidays_country=None,
+                                  holidays_province=None,
                                   verbose=True) -> tuple[pd.DataFrame, dict]:
     """
     Creates a set of time-series features (as columns) in the given pd.DataFrame.
@@ -76,11 +80,15 @@ def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str,
 
     :param dataframe:           dataframe to add time-series features to.
     :param datetime_name:       name of the DateTime column in dataframe.
+    :param value_name:          name of the Target column in dataframe.
     :param hours:               add the "hour" feature.
     :param days_of_week:        add the "day of the week" feature.
     :param weeks:               add the "week of the year" feature.
     :param days_of_month:       add the "day of the month" feature.
     :param months:              add the "month of the year" feature.
+    :param rolling_windows:     a list of integers representing rolling window entries.
+    :param holidays_country:    the country code to add the public holidays of.
+    :param holidays_province:   the province code to add the public holidays of.
     :param verbose:             prints debugging information.
     :return:                    tuple of pd.DataFrame, dictionary of features.
     """
@@ -118,6 +126,31 @@ def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str,
         dataframe_new["month_of_year"] = dataframe_new[datetime_name].dt.strftime("%m").astype(int)
         column_dict["months"] = "month_of_year"
 
+    # Creating rolling windows:
+    if rolling_windows is not None:
+        for n in rolling_windows:
+            # Creating a column for this multiple of rolling mean:
+            dataframe_new[f"rolling_{n}"] = dataframe_new[value_name].rolling(n).mean().fillna(0).astype(int)
+            column_dict[f"rolling_{n}"] = f"rolling_{n}"
+
+    # Adding one-hot encoded holidays column:
+    if holidays_country is not None:
+        all_datetimes = dataframe_new[datetime_name].to_list()
+        is_holiday_list = []
+        # If province is provided, search by province:
+        if holidays_province is not None:
+            for datetime in all_datetimes:
+                is_holiday = holidays.country_holidays(holidays_country, prov=holidays_province).get(datetime)
+                is_holiday_list.append(1 if is_holiday is not None else 0)
+            column_dict["holiday"] = f"holiday_{holidays_country}_{holidays_province}"
+        else:
+            for datetime in all_datetimes:
+                is_holiday = holidays.country_holidays(holidays_country).get(datetime)
+                is_holiday_list.append(1 if is_holiday is not None else 0)
+            column_dict["holiday"] = f"holiday_{holidays_country}"
+        dataframe_new["holiday"] = is_holiday_list
+
+
     return dataframe_new, column_dict
 
 
@@ -147,13 +180,17 @@ def data_create_lags(dataframe: pd.DataFrame, value_name: str,
     # Creating a list of the column names for all the lag columns created:
     lags = [f"lag_{multiple}{lag_label}" for multiple in lag_multiples]
 
-    max_lag = max(lag_multiples) * lag_base
-    if max_lag > dataframe.shape[0]:
-        raise IndexError("Lags exceed dataset size.")
+    if len(lag_multiples) > 0:
+        max_lag = max(lag_multiples) * lag_base
+        min_lag = min(lag_multiples) * lag_base
+        if max_lag > dataframe.shape[0]:
+            raise IndexError("Lags exceed dataset size.")
+    else:
+        max_lag = min_lag = dataframe.shape[0]
     dataframe_new = dataframe.copy()
     for lag_multiplier in lag_multiples:
         dataframe_new[f"lag_{lag_multiplier}{lag_label}"] = dataframe_new[value_name].shift(lag_multiplier * lag_base)
-    return dataframe_new, min(lag_multiples)*lag_base, lags
+    return dataframe_new, min_lag, lags
 
 
 # data_split_features_labels(dataframe, value_name, verbose) splits the dataset into:

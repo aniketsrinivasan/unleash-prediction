@@ -63,6 +63,9 @@ class TimeSeries:
             lag_min:                {self.lag_min} (entries)
             
             split_ratio:            {self.split_ratio} (train/test/valid)
+            df_split_train:         {self.df_split_train.shape}
+            df_split_test:          {self.df_split_test.shape}
+            df_split_valid:         {self.df_split_valid.shape}
         '''
         return string
 
@@ -119,12 +122,14 @@ class TimeSeries:
         if kwargs_features is not None:
             df_augmented, features = data_datetime_create_features(df_augmented,
                                                                    datetime_name=self.datetime_name,
+                                                                   value_name=self.value_name,
                                                                    verbose=self.verbose,
                                                                    **kwargs_features)
         #   else, resort to default feature creation:
         else:
             df_augmented, features = data_datetime_create_features(df_augmented,
                                                                    datetime_name=self.datetime_name,
+                                                                   value_name=self.value_name,
                                                                    verbose=self.verbose)
 
         # Creating time-series lags (e.g. "lag_1w", "lag_4w", ...):

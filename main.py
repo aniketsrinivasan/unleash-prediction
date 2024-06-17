@@ -17,7 +17,7 @@ __kwargs_timeseries_init = dict(
 __kwargs_timeseries_prepare = dict(
     future_window_size=24*7*4,
     future_step_size="1h",
-    split_ratio=[0.9, 0.099, 0.001],
+    split_ratio=[0.9, 0.097, 0.003],
 )
 
 # =======================  HYPERPARAMETERS  ========================
@@ -28,10 +28,13 @@ __kwargs_features = dict(
     weeks=True,
     days_of_month=True,
     months=True,
+    rolling_windows=[24, 24*7, 24*7*4],
+    holidays_country="IND",
+    holidays_province=None,
 )
 # Arguments to modify the lag values created as features:
 __lag_base = 24*7
-__lag_multiples = [1, 3, 12, 54, 108]
+__lag_multiples = [3, 12, 54, 108]
 __lag_label = "w"
 __kwargs_lags = dict(
     lag_base=__lag_base,
@@ -57,6 +60,7 @@ def main():
 
     tester = ModelTester(__kwargs_timeseries_init, __kwargs_timeseries_prepare,
                          __kwargs_features, __kwargs_lags)
+    print(tester.time_series)
     tester.create_model_dict(train=False, validate=False)
     tester.run_training(verbose=False)
     tester.run_validation(verbose=True)
