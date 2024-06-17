@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated commit.">
-      <change afterPath="$PROJECT_DIR$/models/model_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_framework/models/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/master_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/model_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/master_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/model_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/model_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/xgboost/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/xgboost/model_XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/model_XGBoostCV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/xgboost/model_XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/model_XGBoostTTV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +63,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/model_framework/models" />
       <recent name="$PROJECT_DIR$/models/xgboost" />
     </key>
   </component>
@@ -82,7 +88,7 @@
       <workItem from="1718207253478" duration="5074000" />
       <workItem from="1718286649323" duration="11604000" />
       <workItem from="1718360723659" duration="12603000" />
-      <workItem from="1718483785181" duration="10963000" />
+      <workItem from="1718483785181" duration="15921000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -244,7 +250,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718633210286</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1718634681855</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1718634681855</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -269,15 +283,5 @@
     <MESSAGE value="Updated MasterModel framework to control Model(s)." />
     <MESSAGE value="Updated commit." />
     <option name="LAST_COMMIT_MESSAGE" value="Updated commit." />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/__init__.py</url>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

@@ -5,7 +5,7 @@ class TimeSeries:
     def __init__(self, csv_path: str, datetime_name: str, datetime_format: str,
                  value_name: str, verbose=True):
         """
-        Initializes a TimeSeries object, used for managing time-series data to pass into models.
+        Initializes a TimeSeries object, used for managing time-series data to pass into model_framework.
 
         :param csv_path:            path to the .csv file containing the data.
         :param datetime_name:       name of the datetime column (str).
@@ -130,7 +130,8 @@ class TimeSeries:
         # Creating time-series lags (e.g. "lag_1w", "lag_4w", ...):
         #   If kwargs_lags are provided, use them:
         if kwargs_lags is not None:
-            df_augmented, lag_min, lags = data_create_lags(df_augmented, self.value_name,
+            df_augmented, lag_min, lags = data_create_lags(dataframe=df_augmented,
+                                                           value_name=self.value_name,
                                                            verbose=self.verbose,
                                                            **kwargs_lags)
         #   else, create and use a "default" lags:
@@ -138,7 +139,8 @@ class TimeSeries:
             default_lags = dict(lag_base=24*7,
                                 lag_multiples=[4, 8, 16, 54],
                                 lag_label="w")
-            df_augmented, lag_min, lags = data_create_lags(df_augmented, self.value_name,
+            df_augmented, lag_min, lags = data_create_lags(dataframe=df_augmented,
+                                                           value_name=self.value_name,
                                                            verbose=self.verbose,
                                                            **default_lags)
 
