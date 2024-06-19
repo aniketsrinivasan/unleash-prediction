@@ -57,19 +57,19 @@ def main():
     #           the idea is to try encoding the frequencies into the training data directly
     #           most likely would require modifying feature creation (to include fourier)
 
-    # time_series = TimeSeries(**__kwargs_timeseries_init)
-    # time_series.prepare_from_scratch(**__kwargs_timeseries_prepare)
-    # print(time_series)
-    # print(time_series.value_name)
-    #
-    # model = TorchLSTM_v1(time_series)
-    # model.train()
-    # predictions = model.predict(time_series.df_split_test, time_series.value_name)
-    # print(predictions)
-    #
-    # plt.plot(predictions)
-    # plt.plot(time_series.df_split_test[time_series.value_name])
-    # plt.show()
+    time_series = TimeSeries(**__kwargs_timeseries_init)
+    time_series.prepare_from_scratch(**__kwargs_timeseries_prepare)
+    print(time_series)
+    print(time_series.value_name)
+
+    model = TorchLSTM_v1(time_series)
+    model.train()
+    predictions = model.predict(time_series.df_split_test, time_series.value_name)
+    print(predictions)
+
+    plt.plot(predictions)
+    plt.plot(time_series.df_split_test[time_series.value_name])
+    plt.show()
 
     tester = ModelTester(__kwargs_timeseries_init, __kwargs_timeseries_prepare,
                          __kwargs_features, __kwargs_lags)
