@@ -14,8 +14,13 @@ def validation_loss(model, loss_function="mean_squared_error", verbose=True):
     :return:                    tuple[float (loss), DataFrame (df_merged)]
     """
     # Extracting the dataset to predict on:
-    #   this is the validation set pre-prediction (with only feature columns)
-    df_prediction = model.time_series.df_split_valid.fillna(0).copy()
+    if (model.model_name == "XGBoostCV_v1") or (model.model_name == "XGBoostTTV_v1"):
+        # this is the validation set pre-prediction (with only feature columns)
+        df_prediction = model.time_series.df_split_valid.fillna(0).copy()
+    elif (model.model_name == "TorchLSTM_v1"):
+        df_prediction = model.time_series.df_augmented.fillna(0).copy()
+    else:
+        raise NotImplementedError(f"Invalid model name: {model.model_name}. Check validation_loss().")
     # Running predictions on this dataset:
     future_prediction = model.predict(custom_df=df_prediction)
     # Getting the validation dataset (labels)

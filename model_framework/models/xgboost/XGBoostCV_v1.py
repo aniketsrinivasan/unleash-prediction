@@ -37,7 +37,7 @@ class XGBoostCV_v1:
         # Creating a TimeSeriesSplit (for cross-validation) with default test_size (gap 0):
         self.time_series_split = TimeSeriesSplit(n_splits=self.__SPLITS)
 
-        # Creating a dataset for this model (this will be df_augmented from the TimeSeries):
+        # Creating a dataset for this model (this will be the training set from the TimeSeries):
         self.dataset = self.time_series.df_split_train
 
         # Initializing a saved model with scores and cross-validation predictions:

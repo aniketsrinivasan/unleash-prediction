@@ -63,9 +63,10 @@ def data_datetime_sort(dataframe: pd.DataFrame, datetime_name: str, verbose=True
 #   Requires that dataframe is sorted by DateTime.
 #   Returns a tuple:    modified pd.DataFrame, dictionary containing
 def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str, value_name: str,
-                                  hours=True,
-                                  days_of_week=True,
-                                  weeks=True,
+                                  days_since_start=False,
+                                  hours=False,
+                                  days_of_week=False,
+                                  weeks=False,
                                   days_of_month=False,
                                   months=False,
                                   rolling_windows=None,
@@ -81,6 +82,7 @@ def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str, v
     :param dataframe:           dataframe to add time-series features to.
     :param datetime_name:       name of the DateTime column in dataframe.
     :param value_name:          name of the Target column in dataframe.
+    :param days_since_start:    add the "days_since_start" feature (acts like an index count).
     :param hours:               add the "hour" feature.
     :param days_of_week:        add the "day of the week" feature.
     :param weeks:               add the "week of the year" feature.
@@ -99,11 +101,12 @@ def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str, v
     # Initializing dictionary to keep track of created column names:
     column_dict = dict()
 
-    # Days since start of the dataset (added by default):
+    # Days since start of the dataset:
     #   requires the dataframe to be sorted by date already.
-    dataframe_new['days_since_start'] = (dataframe_new[datetime_name]
-                                         - dataframe_new[datetime_name].iloc[0]).dt.days.astype(int)
-    column_dict['days_since_start'] = "days_since_start"
+    if days_since_start:
+        dataframe_new['days_since_start'] = (dataframe_new[datetime_name]
+                                             - dataframe_new[datetime_name].iloc[0]).dt.days.astype(int)
+        column_dict['days_since_start'] = "days_since_start"
 
     # Hours (will almost always be used):
     if hours:
@@ -142,14 +145,14 @@ def data_datetime_create_features(dataframe: pd.DataFrame, datetime_name: str, v
             for datetime in all_datetimes:
                 is_holiday = holidays.country_holidays(holidays_country, prov=holidays_province).get(datetime)
                 is_holiday_list.append(1 if is_holiday is not None else 0)
-            column_dict["holiday"] = f"holiday_{holidays_country}_{holidays_province}"
+            dataframe_new[f"holiday_{holidays_country}_{holidays_province}"] = is_holiday_list
+            column_dict[f"holiday"] = f"holiday_{holidays_country}_{holidays_province}"
         else:
             for datetime in all_datetimes:
                 is_holiday = holidays.country_holidays(holidays_country).get(datetime)
                 is_holiday_list.append(1 if is_holiday is not None else 0)
+            dataframe_new[f"holiday_{holidays_country}"] = is_holiday_list
             column_dict["holiday"] = f"holiday_{holidays_country}"
-        dataframe_new["holiday"] = is_holiday_list
-
 
     return dataframe_new, column_dict
 
@@ -184,7 +187,7 @@ def data_create_lags(dataframe: pd.DataFrame, value_name: str,
         max_lag = max(lag_multiples) * lag_base
         min_lag = min(lag_multiples) * lag_base
         if max_lag > dataframe.shape[0]:
-            raise IndexError("Lags exceed dataset size.")
+            raise IndexError(f"Lag size ({max_lag}) exceeds dataset size ({dataframe.shape[0]}).")
     else:
         max_lag = min_lag = dataframe.shape[0]
     dataframe_new = dataframe.copy()

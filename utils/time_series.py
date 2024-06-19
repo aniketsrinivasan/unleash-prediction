@@ -110,8 +110,6 @@ class TimeSeries:
             df_augmented = custom_df[[self.value_name, self.datetime_name]].copy()
 
         # Converting self.datetime_name to a DateTime column:
-        if kwargs_lags is None:
-            kwargs_lags = {"lag_base": 24 * 7, "lag_multiples": [4, 8, 12, 28, 52]}
         df_augmented = data_datetime_conversion(df_augmented, self.datetime_name,
                                                 self.datetime_format, self.verbose)
         # Sorting by DateTime:
@@ -141,9 +139,9 @@ class TimeSeries:
                                                            **kwargs_lags)
         #   else, create and use a "default" lags:
         else:
-            default_lags = dict(lag_base=24*7,
-                                lag_multiples=[4, 8, 16, 54],
-                                lag_label="w")
+            default_lags = dict(lag_base=1,
+                                lag_multiples=[],
+                                lag_label="")
             df_augmented, lag_min, lags = data_create_lags(dataframe=df_augmented,
                                                            value_name=self.value_name,
                                                            verbose=self.verbose,
