@@ -35,6 +35,11 @@ Update (17/06/2024):
     on the validation set created in TimeSeries.
 * Created ModelTester for test automation and comparison of various models.
 
+Update (19/06/2024):
+* Implemented a (very rough) TorchLSTM_v1 model (uses RNNs for prediction).
+* Modified methods in TimeSeries and functions in dataset_utils to work with LSTMs.
+* Ran initial training and testing with TorchLSTM_v1 (needs significant improvement).
+
 
 # How to Use:
 To be implemented.
