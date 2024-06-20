@@ -40,6 +40,12 @@ Update (19/06/2024):
 * Modified methods in TimeSeries and functions in dataset_utils to work with LSTMs.
 * Ran initial training and testing with TorchLSTM_v1 (needs significant improvement).
 
+Update (20/06/2024):
+* Completed an initial TorchLSTM_v1 model which works well (trained and debugged).
+* Solved LSTM problem where the model converged to the TimeSeries mean during training.
+* Modified methods in TimeSeries to work with LSTMs.
+* Began implementation of TorchLSTM_v1 into ModelTester testing framework.
+
 
 # How to Use:
 To be implemented.
