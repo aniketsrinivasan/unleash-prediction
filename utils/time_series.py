@@ -24,7 +24,8 @@ class TimeSeries:
 
         # Initializing modified dataframes:
         #   Dataframe after passing data_augment:
-        self.df_augmented = None            # sorted dataframe with DateTime, Target, features, lags
+        self.df_augmented = None                # sorted dataframe with DateTime, Target, features, lags
+        self.df_augmented_values_only = None    # sorted dataframe (by DateTime) but with only Target
         #   Features of dataframe:
         self.features = None                # list of non-lag features (as column names)
         self.lags = None                    # list of lag features (as column names)
@@ -150,6 +151,7 @@ class TimeSeries:
         # Storing all the information from this process:
         if update_self:
             self.df_augmented = df_augmented.copy()
+            self.df_augmented_values_only = df_augmented[self.value_name].copy()
             self.features = list(features.values())
             self.lags = lags
             self.lag_min = lag_min
