@@ -58,6 +58,10 @@ def main():
     #           most likely would require modifying feature creation (to include fourier)
     # idea: use wavelet transformations to initially train LSTM, and then fine-tune on dataset
     #           (almost ensures convergence to a meaningful pattern)
+    # implement dataset methods to use torch.DataLoader for large datasets (for LSTM effiency)
+    # rewrite significant code from scratch to restructure (add inheritance?)
+    # implement saving and loading models properly
+    # find ways to combine XGBoost and LSTM to come up with predictions.
 
     time_series = TimeSeries(**__kwargs_timeseries_init)
     time_series.prepare_from_scratch(**__kwargs_timeseries_prepare)
