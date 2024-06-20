@@ -56,29 +56,29 @@ def main():
     #       - fourier analytic methods (i.e. wavelet transform?)
     #           the idea is to try encoding the frequencies into the training data directly
     #           most likely would require modifying feature creation (to include fourier)
+    # idea: use wavelet transformations to initially train LSTM, and then fine-tune on dataset
+    #           (almost ensures convergence to a meaningful pattern)
 
     time_series = TimeSeries(**__kwargs_timeseries_init)
     time_series.prepare_from_scratch(**__kwargs_timeseries_prepare)
     print(time_series)
     print(time_series.value_name)
 
-    model = TorchLSTM_v1(time_series)
-    model.train()
-    predictions = model.predict(time_series.df_split_test, time_series.value_name)
-    print(predictions)
+    model = MasterModel(time_series, "TorchLSTM_v1",
+                        read_stub=None,
+                        write_stub="/Users/aniket/PycharmProjects/unleashPredictions/model_framework/models/LSTM/saved_models/lstm_1",
+                        is_trained=False)
+    model.model_create()
+    model.model_train()
 
-    plt.plot(predictions)
-    plt.plot(time_series.df_split_test[time_series.value_name])
-    plt.show()
-
-    tester = ModelTester(__kwargs_timeseries_init, __kwargs_timeseries_prepare,
-                         __kwargs_features, __kwargs_lags)
-    print(tester.time_series)
-    print(tester.time_series.df_augmented)
-    tester.create_model_dict(train=False, validate=False)
-    tester.run_training(verbose=False)
-    tester.run_validation(verbose=True)
-    tester.get_validation_losses()
+    # tester = ModelTester(__kwargs_timeseries_init, __kwargs_timeseries_prepare,
+    #                      __kwargs_features, __kwargs_lags)
+    # print(tester.time_series)
+    # print(tester.time_series.df_augmented)
+    # tester.create_model_dict(train=False, validate=False)
+    # tester.run_training(verbose=False)
+    # tester.run_validation(verbose=True)
+    # tester.get_validation_losses()
 
     # model = XGBoostTTV_v1(time_series=time_series)
     # model.train()
