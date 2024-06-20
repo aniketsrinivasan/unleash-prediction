@@ -1,170 +1,210 @@
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 import numpy as np
+import os
 from utils import TimeSeries
 
 
 class BaseLSTM(nn.Module):
     # Hyperparameters for the LSTM:
+    __INPUT_SIZE = 50
+    __HIDDEN_SIZE = 512
+    __NUM_LAYERS = 3
+    __DROPOUT = 0.2
+    # Size of the fully connected layer (at the end):
+    __FULLY_CONNECTED_SIZE = 256
+    # LSTM hyperparameters a dictionary:
     __kwargs_hyperparams = dict(
-        input_size=50,       # number of expected input (x) features
-        hidden_size=128,     # number of features in the hidden state
-        num_layers=2,       # number of RNNs to stack (forming a stacked LSTM)
-        dropout=0.2,
+        input_size=__INPUT_SIZE,          # number of expected input (x) features (essentially sequence length
+        hidden_size=__HIDDEN_SIZE,
+        num_layers=__NUM_LAYERS,
+        dropout=__DROPOUT,
     )
-    # Extracting only the individual parameters:
-    __INPUT_SIZE = __kwargs_hyperparams["input_size"]
-    __HIDDEN_SIZE = __kwargs_hyperparams["hidden_size"]
-    __NUM_LAYERS = __kwargs_hyperparams["num_layers"]
-    # Size of the fully connected layer:
-    __FULLY_CONNECTED_SIZE = 128
+    __DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    def __init__(self, num_classes, seq_length):
+    def __init__(self, num_classes):
         """
         Creation of the LSTM backbone that TorchLSTM_v1 functions on.
 
-        :param num_classes:     number of classes.
-        :param seq_length:      length of sequence
+        :param num_classes:     number of outputs desired (per sequence input).
         """
         super(BaseLSTM, self).__init__()
         # Setting instance information:
-        self.num_classes = num_classes      # number of classes
-        self.seq_length = seq_length        # size of the sequence
+        self.num_classes = num_classes
+        self.input_size = self.__INPUT_SIZE     # accessed by TorchLSTM_v1 later
 
-        # Storing input size (accessed by the main model later):
-        self.input_size = self.__INPUT_SIZE
+        # Initializing the LSTM layer:
+        self.lstm = nn.LSTM(batch_first=True, bidirectional=False, **self.__kwargs_hyperparams)
+        # Initializing other layers (namely FC and ReLU layers) as a Sequential network:
+        #   hidden_size ==> fully_connected_size ==> num_classes
+        self.sequential = nn.Sequential(nn.ReLU(),
+                                        nn.Linear(self.__HIDDEN_SIZE, self.__FULLY_CONNECTED_SIZE),
+                                        nn.ReLU(),
+                                        nn.Linear(self.__FULLY_CONNECTED_SIZE, num_classes)
+                                        )
 
-        # Initializing the LSTM model:
-        self.lstm = nn.LSTM(batch_first=True, **self.__kwargs_hyperparams)
-        # Initializing other layers (namely FC and ReLU layers):
-        self.fc1 = nn.Linear(self.__HIDDEN_SIZE, self.__FULLY_CONNECTED_SIZE)
-        self.fc2 = nn.Linear(self.__FULLY_CONNECTED_SIZE, num_classes)
-        self.relu = nn.ReLU()
-
-    # Forward method implementation:
+    # Implementation of forward-propagation method:
     def forward(self, x):
         """
-        Forward method for BaseLSTM. The input "x" is expected to be prepared using
+        Forward method for BaseLSTM. The input "x" must be prepared using the data preparation function in
         TorchLSTM_v1.prepare_data() first.
 
-        :param x:       input for prediction.
-        :return:        predictions (check dtype).
-        """
-        # Changing to type float32 (required by LSTM):
-        x = x.to(torch.float32)
-        # Initializing:
-        #   hidden state:
-        h_0 = Variable(torch.zeros(self.__NUM_LAYERS, x.size(0), self.__HIDDEN_SIZE))
-        #   internal state:
-        c_0 = Variable(torch.zeros(self.__NUM_LAYERS, x.size(0), self.__HIDDEN_SIZE))
+        Here, "x" must be of shape (batch_size, sequence_length, input_size).
 
-        # Propagate input through LSTM:
-        _, (hn, cn) = self.lstm(x, (h_0, c_0))
-        # Reshaping data for the Dense layer:
-        hn = hn.view(-1, self.__HIDDEN_SIZE)
-        # Passing through Dense layers:
-        out = self.relu(hn)
-        out = self.fc1(out)
-        out = self.relu(out)
-        out = self.fc2(out)
-        return out
+        :param x:       input for prediction, of the form returned by TorchLSTM_v1.prepare_data().
+        :return:        predictions (in the form of a torch.float32
+        """
+        # Convert to type float32 (required by the LSTM model):
+        x = x.to(torch.float32)
+
+        # Initializing hidden state and internal state:
+        #   hidden state:   (num_layers, x_size, hidden_size)
+        h_0 = Variable(torch.zeros(self.__NUM_LAYERS, x.size(dim=0), self.__HIDDEN_SIZE))
+        #   internal state: (num_layers, x_size, hidden_size)
+        c_0 = Variable(torch.zeros(self.__NUM_LAYERS, x.size(dim=0), self.__HIDDEN_SIZE))
+
+        # Propagating input through LSTM:
+        x, (_, _) = self.lstm(x, (h_0.detach(), c_0.detach()))
+        x = x.view(-1, self.__HIDDEN_SIZE)        # reshaping for Dense layer:  (, hidden_size)
+        # Passing through Dense layers (as Sequential):
+        output = self.sequential(x)
+        return output
 
 
 class TorchLSTM_v1:
     # LSTM hyperparameters:
-    __NUM_CLASSES = 1
-    __SEQ_LENGTH = 20
-    # Learning rate and epochs for training:
-    __LEARNING_RATE = 0.00001
-    __EPOCHS = 5000
+    __NUM_CLASSES = 1            # how many output features are desired
+    __LEARNING_RATE = 0.0001     # learning rate for optimizer (Adam)
+    __EPOCHS = 1000
+    __DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    def __init__(self, time_series: TimeSeries):
-        # Storing this TimeSeries:
+    def __init__(self, time_series: TimeSeries, load_model=None, save_model=None):
+        # Storing this TimeSeries and its data information:
         self.time_series = time_series
-        # Creating a list of features (as column names) for the dataset:
-        #   note: LSTM only uses the Target sequence, so there are no features.
-        self.features = None
-        # Target to predict (as a column name):
+        self.features = None        # this LSTM only uses the Target sequence, no other features
         self.target = time_series.value_name
+        self.verbose = time_series.verbose
 
         self.model_name = "TorchLSTM_v1"
-        # Initializing the model:
-        self.regressor = BaseLSTM(self.__NUM_CLASSES, self.__SEQ_LENGTH)
+        self.load_model = load_model
+        self.save_model = save_model
+        # Initializing the regressor and other model information:
+        self.regressor = BaseLSTM(self.__NUM_CLASSES).to(self.__DEVICE)
+        if (load_model is not None) and os.path.exists(load_model):
+            print(f"Loading existing model from {load_model}...")
+            self.regressor.load_state_dict(torch.load(load_model))
+
         self.loss_function = nn.MSELoss()       # mean-squared error for regression
-        self.optimizer = torch.optim.Adam(self.regressor.parameters(), self.__LEARNING_RATE)
-        # How far to look back each prediction:
-        self.__LOOKBACK = self.regressor.input_size
+        self.optimizer = torch.optim.Adam(self.regressor.parameters(), lr=self.__LEARNING_RATE)
+        # How far to look back each prediction (stored as BaseLSTM.input_size):
+        self.__lookback = self.regressor.input_size
 
-        # Creating the Scaler used (for numerical stability when using activation functions):
-        self.scaler = MinMaxScaler(feature_range=(0, 1))
+        # Creating the Scaler used (for numerical stability with activation functions):
+        self.scaler = StandardScaler()
 
-    def prepare_data(self, dataset=None, dataset_value_name=None):
+    def prepare_data(self, dataset=None, value_name=None):
         """
-        Creates two torch.Tensor objects containing inputs and labels of length self.__LOOKBACK from the
-        TimeSeries's training data split.
+        Prepares the data to work with the BaseLSTM architecture. By default, the dataset used is
+        the training split (TimeSeries.df_split_train) of this TimeSeries.
 
-        The dataset passed must be a pd.DataFrame.
+        For custom datasets, the dataset's Target column name must be passed into value_name.
+        Custom datasets are assumed to be sorted in time-series order.
 
-        :param dataset:             preparing a custom dataset. if None, then self.time_series.df_split_train is used.
-        :param dataset_value_name:  name of the Target column in dataset.
-        :return:                    tuple[torch.tensor, torch.tensor].
+        This function converts the dataset to sequential Variables to pass into the LSTM model.
+
+        :param dataset:         passing a custom dataset.
+        :param value_name:      name of the Target column (required if dataset is used).
+        :return:                tuple[torch.Variable, torch.Variable]
         """
-        # Initializing empty lists for inputs and labels (X and y):
+        # Initializing empty lists for inputs and labels:
         inputs, labels = [], []
         if dataset is None:
             dataset = self.time_series.df_split_train
-            dataset = np.array(dataset[self.time_series.value_name]).reshape(-1, 1)
-        else:
-            dataset = np.array(dataset[dataset_value_name]).reshape(-1, 1)
-        # If the lookback is larger than the dataset itself:
-        if dataset.shape[0] < self.__LOOKBACK:
-            raise IndexError(f"Dataset ({dataset.shape[0]}) is smaller than the lookback ({self.__LOOKBACK}).")
-
+            value_name = self.target
+        elif value_name is None:
+            raise IndexError(f"Custom dataset was provided, but without a Target column name.")
+        # If the lookback is larger than the dataset itself, then end:
+        if dataset.shape[0] < self.__lookback:
+            raise IndexError(f"Dataset ({dataset.shape[0]}) is smaller than the lookback ({self.__lookback}). "
+                             f"Change input size (__INPUT_SIZE) in BaseLSTM implementation.")
+        # Conversion of the Target column into an array of shape (len(dataset), 1)
+        try:
+            dataset = np.array(dataset[value_name]).reshape(-1, 1)
+        except Exception as e:
+            raise IndexError(f"Error {e}. Does dataset contain a column {value_name}?")
+        # Applying the Scaler transformation to the dataset:
         dataset = self.scaler.fit_transform(dataset)
-        for i in range(len(dataset) - self.__LOOKBACK):
-            # Creating this feature (of length __LOOKBACK):
-            feature = dataset[i : i+self.__LOOKBACK]
-            # Creating this target (of length __LOOKBACK, but incremented by 1):
-            target = dataset[i+1 : i+self.__LOOKBACK+1]
+
+        # The labels set is offset from inputs by __NUM_CLASSES. We iterate:
+        for i in range(len(dataset) - self.__lookback - (self.__NUM_CLASSES - 1)):
+            # Creating this feature (of length __lookback):
+            feature = dataset[i : (i+self.__lookback)]
+            # Creating this target (of length __lookback) incremented by __NUM_CLASSES:
+            target = dataset[(i+self.__lookback) : (i+self.__lookback+self.__NUM_CLASSES)]
             # Appending:
             inputs.append(feature)
             labels.append(target)
 
-        # Converting our data into the desired format (as torch.Variable objects, reshaped):
+        # Converting data into the desired format (as torch.Variable objects, reshaped):
         X_train, y_train = Variable(torch.tensor(np.array(inputs))), Variable(torch.tensor(np.array(labels)))
+        # X_train:      ==> (number_of_batches, 1, batch_size)
         X_train = torch.reshape(X_train, (X_train.shape[0], 1, X_train.shape[1]))
-        y_train = torch.reshape(y_train, (y_train.shape[0], 1, y_train.shape[1]))
+        # y_train       ==> (number_of_batches, num_classes)
+        y_train = torch.reshape(y_train, (y_train.shape[0], y_train.shape[1]))
+        # Conversion of X_train, y_train to torch.float32 (so they are both the same dtype):
+        X_train, y_train = X_train.to(torch.float32), y_train.to(torch.float32)
+
         return X_train, y_train
 
+    # Training method defaults to using the TimeSeries training split.
     def train(self):
-        # Preparing the training data:
+        """
+        Train the LSTM model in BaseLSTM. Uses the TimeSeries training data split.
+
+        :return:    None.
+        """
+        # Prepare the training data (prepare_data uses time_series.df_split_train by default):
         X_train, y_train = self.prepare_data()
-        #   outputs is of dtype="torch.float32" but y_train is of dtype="torch.float64"
-        #   so we convert y_train to match (loss.backward() doesn't work otherwise):
-        y_train = y_train.to(torch.float32)
-        print(X_train.dtype)
-        print(X_train.size())
+        print(X_train.shape)
+        print(self.regressor)
 
         # Training loop:
         for epoch in range(self.__EPOCHS):
-            outputs = self.regressor.forward(X_train)      # forward-propagation
-            self.optimizer.zero_grad()
+            output = self.regressor.forward(X_train)    # forward-propagation
+            self.optimizer.zero_grad()                  # zero-grad
 
             # Calculating loss and performing back-propagation:
-            loss = self.loss_function(outputs, y_train)
+            loss = self.loss_function(output, y_train)
             loss.backward()
             self.optimizer.step()
 
-            if (self.time_series.verbose) and (epoch % 100 == 0):
-                print(f"Epoch: {epoch}, Loss: {loss.item():.5f}.")
+            # Printing training loop information (every 100 epochs):
+            if (self.verbose) and (epoch % 100 == 0):
+                print(f"Epoch: {epoch}, Loss: {loss.item():.5f}")
 
-    def predict(self, dataset=None, dataset_value_name=None):
+        # Saving model:
+        if (self.save_model is not None) and os.path.exists(self.save_model):
+            torch.save(self.regressor.state_dict(), self.save_model)
+            print(f"Saving trained model to {self.save_model}.")
+
+        return
+
+    def predict(self, dataset=None, value_name=None):
+        """
+        Running predictions on a dataset. Uses the validation data split (df_split_valid) by default.
+        To use a custom dataset, pass the pd.DataFrame and Target column name.
+
+        :param dataset:         custom dataset (pd.DataFrame).
+        :param value_name:      name of Target column for dataset.
+        :return:                predictions (as a numpy array) that have been re-scaled.
+        """
         if dataset is None:
-            dataset = self.time_series.df_split_train
-            dataset_value_name = self.time_series.value_name
-        dataset, _ = self.prepare_data(dataset, dataset_value_name)
+            dataset = self.time_series.df_split_valid
+            value_name = self.target
+        dataset, _ = self.prepare_data(dataset=dataset, value_name=value_name)
+        # Getting predictions, detaching to numpy (to allow pass through inverse_transform()):
         predictions = self.regressor.forward(dataset).detach().numpy()
         predictions = self.scaler.inverse_transform(predictions)
         return predictions
