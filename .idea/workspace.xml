@@ -4,17 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Implemented one-hot encoded holidays.">
-      <change afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" afterDir="false" />
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated commit.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/model_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/model_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/model_XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/model_XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/dataset_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/model_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/master_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,7 +86,8 @@
       <workItem from="1718360723659" duration="12603000" />
       <workItem from="1718483785181" duration="18965000" />
       <workItem from="1718655949198" duration="4352000" />
-      <workItem from="1718724992104" duration="16977000" />
+      <workItem from="1718724992104" duration="17295000" />
+      <workItem from="1718883858436" duration="13909000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -293,7 +289,31 @@
       <option name="project" value="LOCAL" />
       <updated>1718660391058</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Initial implementation of TorchLSTM_v1 model.">
+      <option name="closed" value="true" />
+      <created>1718822240294</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1718822240294</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Updated README.">
+      <option name="closed" value="true" />
+      <created>1718822334986</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1718822334986</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1718822366353</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1718822366353</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -317,8 +337,10 @@
     <MESSAGE value="Updated Model(s) implementation." />
     <MESSAGE value="Updated MasterModel framework to control Model(s)." />
     <MESSAGE value="Modified structure.&#10;Added additional automated testing features." />
-    <MESSAGE value="Updated commit." />
     <MESSAGE value="Implemented one-hot encoded holidays." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented one-hot encoded holidays." />
+    <MESSAGE value="Initial implementation of TorchLSTM_v1 model." />
+    <MESSAGE value="Updated README." />
+    <MESSAGE value="Updated commit." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated commit." />
   </component>
 </project>
