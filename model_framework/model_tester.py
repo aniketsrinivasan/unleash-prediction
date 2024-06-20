@@ -35,7 +35,7 @@ class ModelTester:
         self.kwargs_timeseries_prepare = kwargs_timeseries_prepare  # saving args used for TimeSeries prepare
 
         # Storing a list of model_framework:
-        self.model_list = ["XGBoostCV_v1", "XGBoostTTV_v1"]     # automate this later
+        self.model_list = ["XGBoostCV_v1", "XGBoostTTV_v1", "TorchLSTM_v1"]     # automate this later
 
         # Initializing an empty dictionary to save trained model_framework and results:
         self.model_dict = None
@@ -86,7 +86,7 @@ class ModelTester:
         if verbose:
             print(f"Running training on all model_framework with override={override}:")
         for master_model in list(self.model_dict.values()):
-            if (override) or (not master_model.is_trained):
+            if override or (not master_model.is_trained):
                 if verbose:
                     print(f"Training model {master_model.model_name}...")
                 master_model.model_train()
@@ -105,7 +105,7 @@ class ModelTester:
         if verbose:
             print(f"Running validation on all model_framework with override={override}:")
         for master_model in list(self.model_dict.values()):
-            if (override) or (master_model.model_validation_loss is None):
+            if override or (master_model.model_validation_loss is None):
                 if verbose:
                     print(f"Validating model {master_model.model_name}...")
                 master_model.model_get_validation_loss(loss_function, verbose=verbose)
