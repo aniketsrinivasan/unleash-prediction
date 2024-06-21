@@ -46,6 +46,11 @@ Update (20/06/2024):
 * Modified methods in TimeSeries to work with LSTMs.
 * Began implementation of TorchLSTM_v1 into ModelTester testing framework.
 
+Update (21/06/2024):
+* Overhauled implementation of dataset_utils and TimeSeries to streamline the full-scale
+    implementation of TorchLSTM_v1.
+* Updated main.py hyperparameters to fit new TimeSeries implementation.
+
 
 # How to Use:
 To be implemented.
