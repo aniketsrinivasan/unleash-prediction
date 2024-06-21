@@ -2,67 +2,76 @@ from .dataset_utils import *
 
 
 class TimeSeries:
-    def __init__(self, csv_path: str, datetime_name: str, datetime_format: str,
-                 value_name: str, verbose=True):
+    def __init__(self, csv_path: str, datetime_name: str, datetime_format: str, value_name: str, split_ratio=None,
+                 kwargs_features=None, kwargs_lags=None, kwargs_last_n=None, kwargs_prepare_future=None,
+                 verbose=True):
         """
-        Initializes a TimeSeries object, used for managing time-series data to pass into model_framework.
+        Initializes a TimeSeries object, used for managing time-series data to pass into the
+        MasterModel framework (for machine learning models).
 
         :param csv_path:            path to the .csv file containing the data.
         :param datetime_name:       name of the datetime column (str).
         :param datetime_format:     format of the datetime column (str) (e.g. "%Y-%m-%d %H:%M:%S").
         :param value_name:          name of the value column (str).
+        :param kwargs_features:     (kwargs) for initializing the time-series feature creation.
+        :param kwargs_lags:         (kwargs) for initializing the time-series lag creation.
         :param verbose:             prints debugging information.
         """
-
         self.verbose = verbose
 
-        # Initializing the "raw" dataframe (read directly from the .csv):
-        self.df_raw = data_read_csv(csv_path, verbose=self.verbose)
-        self.datetime_name = datetime_name
-        self.datetime_format = datetime_format
-        self.value_name = value_name
+        # Initializing the "raw" dataset information:
+        self.df_raw = data_read_csv(csv_path, verbose=self.verbose)     # raw DataFrame
+        self.datetime_name = datetime_name                              # name of DateTime column
+        self.datetime_format = datetime_format                          # format of DateTime column
+        self.value_name = value_name                                    # name of Target column
 
-        # Initializing modified dataframes:
-        #   Dataframe after passing data_augment:
+        # Initializing augmentation kwargs:
+        self.split_ratio = split_ratio
+        self.kwargs_prepare_future = kwargs_prepare_future
+        self.kwargs_features = kwargs_features
+        self.kwargs_lags = kwargs_lags
+        self.kwargs_last_n = kwargs_last_n
+
+        # Initializing modified DataFrame information:
         self.df_augmented = None                # sorted dataframe with DateTime, Target, features, lags
         self.df_augmented_values_only = None    # sorted dataframe (by DateTime) but with only Target
+        #   DataFrame with last "n" entries of df_augmented:
+        self.df_last_n = None
         #   Features of dataframe:
-        self.features = None                # list of non-lag features (as column names)
-        self.lags = None                    # list of lag features (as column names)
+        self.features = None                    # list of non-lag features (as column names)
+        self.lags = None                        # list of lag features (as column names)
         #   (Minimum) lag value used (stored for when predictions are made):
         self.lag_min = None
+        self.lag_max = None
 
         # Initializing the train/test/valid split dataframes:
-        self.split_ratio = None
         self.df_split_train = None
+        self.df_split_train_last_n = None   # last "n" entries of training split
         self.df_split_test = None
+        self.df_split_test_last_n = None    # last "n" entries of testing split
         self.df_split_valid = None
 
         # Initializing future (only) and future (appended) dataframes:
         self.df_future_only = None
         self.df_future_concat = None
 
-        # Initializing prediction dataframe(s) and information:
-        self.df_future_predictions = None       # DataFrame containing past info and future predictions
-        self.isfuture_name = None               # name of mask column isFuture (as column name)
-
     # When the object is called using print() or otherwise (representation).
     def __repr__(self):
         string = f'''
         TimeSeries object with the following attributes:
             df_raw (shape):         {self.df_raw.shape}      
-        
+
             verbose:                {self.verbose}
             datetime_name:          {self.datetime_name}
             datetime_format:        {self.datetime_format}
             value_name:             {self.value_name}
-            
-            df_augmented (shape):   {self.df_augmented.shape if self.df_augmented is not None 
+
+            df_augmented (shape):   {self.df_augmented.shape if self.df_augmented is not None
                                                              else "not created."}
             features:               {self.features}
             lags:                   {self.lags}
             lag_min:                {self.lag_min} (entries)
-            
+
             split_ratio:            {self.split_ratio} (train/test/valid)
             df_split_train:         {self.df_split_train.shape}
             df_split_test:          {self.df_split_test.shape}
@@ -70,16 +79,6 @@ class TimeSeries:
         '''
         return string
 
-    # data_augment(self, kwargs) augments the dataframe in self.df_raw and creates a new instance
-    #   attribute self.df_augmented.
-    # The following augmentations are currently executed:
-    #   * all columns that are not self.datetime_name or self.value_name are removed
-    #   * the self.datetime_name column is converted to a DateTime format
-    #   * the dataframe is sorted by DateTime
-    #   * time-series features are created (based on kwargs_features)
-    #   * time-series lags are created (based on kwargs_lags)
-    # NOTE: implement interpolation methods during initial augmentation for missing values?
-    #       (find some way to deal w/ missing values basically).
     def df_augment(self, custom_df=None, update_self=True, override=False,
                    kwargs_features=None, kwargs_lags=None):
         """
@@ -95,7 +94,6 @@ class TimeSeries:
         :return:                    either nothing, or (if update_self==False), tuple of:
                                         df_augmented, features, lags, minimum_lag
         """
-
         # If the data has already been augmented, do not augment again if override==False:
         if (self.df_augmented is not None) and (override is False) and (update_self is True):
             print(f"Override is set to False, and an existing augmented dataframe exists.")
@@ -119,17 +117,17 @@ class TimeSeries:
         # Creating time-series features (e.g. "Week", "Month", "Year"):
         #   If kwargs_features are provided, use them:
         if kwargs_features is not None:
-            df_augmented, features = data_datetime_create_features(df_augmented,
-                                                                   datetime_name=self.datetime_name,
-                                                                   value_name=self.value_name,
-                                                                   verbose=self.verbose,
-                                                                   **kwargs_features)
+            df_augmented, features = data_create_features(df_augmented,
+                                                          datetime_name=self.datetime_name,
+                                                          value_name=self.value_name,
+                                                          verbose=self.verbose,
+                                                          **kwargs_features)
         #   else, resort to default feature creation:
         else:
-            df_augmented, features = data_datetime_create_features(df_augmented,
-                                                                   datetime_name=self.datetime_name,
-                                                                   value_name=self.value_name,
-                                                                   verbose=self.verbose)
+            df_augmented, features = data_create_features(df_augmented,
+                                                          datetime_name=self.datetime_name,
+                                                          value_name=self.value_name,
+                                                          verbose=self.verbose)
 
         # Creating time-series lags (e.g. "lag_1w", "lag_4w", ...):
         #   If kwargs_lags are provided, use them:
@@ -178,7 +176,7 @@ class TimeSeries:
 
         # If split_ratio is not provided, set to default values below:
         if split_ratio is None:
-            split_ratio = [0.7, 0.2, 0.1]
+            split_ratio = self.split_ratio
 
         # Splitting the augmented dataframe:
         train, test, valid = data_split_train_test_valid(self.df_augmented,
@@ -238,23 +236,55 @@ class TimeSeries:
         else:
             return df_future_only, df_future_concat
 
-    def prepare_from_scratch(self, future_window_size: int, future_step_size: str,
-                             split_ratio=None, kwargs_features=None, kwargs_lags=None):
+    def df_create_last_n(self, kwargs_last_n=None):
+        # Defaulting to initialized kwargs_last_n if not provided:
+        if kwargs_last_n is None:
+            kwargs_last_n = self.kwargs_last_n
+        # Setting df_last_n, df_split_train_last_n, df_split_test_last_n:
+        if self.df_augmented is not None:
+            self.df_last_n = data_get_last_n(dataframe=self.df_augmented, verbose=self.verbose,
+                                             **kwargs_last_n)
+        if self.df_split_train is not None:
+            self.df_split_train_last_n = data_get_last_n(dataframe=self.df_split_train, verbose=self.verbose,
+                                                         **kwargs_last_n)
+        if self.df_split_test is not None:
+            self.df_split_test_last_n = data_get_last_n(dataframe=self.df_split_test, verbose=self.verbose,
+                                                        **kwargs_last_n)
+        return
+
+    def prepare_from_scratch(self, kwargs_last_n=None, split_ratio=None, kwargs_features=None,
+                             kwargs_lags=None, kwargs_prepare_future=None):
         """
         Prepares the entire instance from scratch. Overrides any existing values automatically.
 
-        :param future_window_size:      number of entries to add to the future.
-        :param future_step_size:        the step (as a str) between each entry (e.g. "1h").
+
+        :param kwargs_last_n:           parameters to add last "n" entries to datasets.
         :param split_ratio:             a list of three floats (adding to 1) representing train/test/valid ratios.
         :param kwargs_features:         time-series features to add (in the form passed to df_augment()).
         :param kwargs_lags:             lag parameters to add (in the form passed to df_augment()).
+        :param kwargs_prepare_future:   arguments for preparation of future (window_size/step_size).
         :return:                        None.
         """
+        # If split_ratio, kwargs_features and kwargs_lags are not provided, default to whatever
+        #   was used to initialize the TimeSeries:
+        if kwargs_last_n is None:
+            kwargs_last_n = self.kwargs_last_n
+        if split_ratio is None:
+            split_ratio = self.split_ratio
+        if kwargs_features is None:
+            kwargs_features = self.kwargs_features
+        if kwargs_lags is None:
+            kwargs_lags = self.kwargs_lags
+        if kwargs_prepare_future is None:
+            kwargs_prepare_future = self.kwargs_prepare_future
+
         # Augment and store the raw data:
         self.df_augment(override=True, kwargs_features=kwargs_features, kwargs_lags=kwargs_lags)
         # Split and store the raw data into train/test/valid datasets:
         self.df_split_ttv(split_ratio, override=True)
         # Create and store future (both "only" and "concat") datasets:
-        self.df_create_future(window_size=future_window_size, step_size=future_step_size,
+        self.df_create_future(**kwargs_prepare_future,
                               kwargs_features=kwargs_features, kwargs_lags=kwargs_lags)
+        # Create last_n entries:
+        self.df_create_last_n(kwargs_last_n=kwargs_last_n)
         return
