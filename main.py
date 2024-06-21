@@ -6,19 +6,10 @@ import matplotlib.pyplot as plt
 #                           FOR THE USER
 
 # =========================  PARAMETERS  ===========================
-# Initialization parameters for the TimeSeries object:
-__kwargs_timeseries_init = dict(
-    csv_path="/Users/aniket/PycharmProjects/unleashPredictions/Electric_Production.csv",
-    datetime_name="DATE",
-    datetime_format="%d/%m/%Y",
-    value_name="IPG2211A2N",
-    verbose=True,
-)
-# Initialization parameters for TimeSeries preparation:
-__kwargs_timeseries_prepare = dict(
-    future_window_size=24*7*4,
-    future_step_size="1h",
-    split_ratio=[0.6, 0.2, 0.2],
+# Initialization parameters for TimeSeries future preparation:
+__kwargs_timeseries_future = dict(
+    window_size=24*7*4,
+    step_size="1h",
 )
 
 # =======================  HYPERPARAMETERS  ========================
@@ -30,7 +21,7 @@ __kwargs_features = dict(
     days_of_month=True,
     months=True,
     rolling_windows=[100],
-    holidays_country="IND",
+    holidays_country=None,
     holidays_province=None,
 )
 # Arguments to modify the lag values created as features:
@@ -41,6 +32,25 @@ __kwargs_lags = dict(
     lag_base=__lag_base,
     lag_multiples=__lag_multiples,
     lag_label=__lag_label
+)
+
+# Last "n" kwargs:
+__kwargs_last_n = dict(
+    window_base=1,
+    window_multiple=1
+)
+
+__kwargs_timeseries_init = dict(
+    csv_path="/Users/aniket/PycharmProjects/unleashPredictions/Electric_Production.csv",
+    datetime_name="DATE",
+    datetime_format="%d/%m/%Y",
+    value_name="IPG2211A2N",
+    split_ratio=[0.7, 0.1, 0.2],
+    kwargs_features=__kwargs_features,
+    kwargs_lags=__kwargs_lags,
+    kwargs_last_n=__kwargs_last_n,
+    kwargs_prepare_future=__kwargs_timeseries_future,
+    verbose=True,
 )
 # ==================================================================
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,8 +74,7 @@ def main():
     # find ways to combine XGBoost and LSTM to come up with predictions.
 
     time_series = TimeSeries(**__kwargs_timeseries_init)
-    time_series.prepare_from_scratch(**__kwargs_timeseries_prepare, kwargs_features=__kwargs_features,
-                                     kwargs_lags=__kwargs_lags)
+    time_series.prepare_from_scratch()
     print(time_series)
     print(time_series.value_name)
 

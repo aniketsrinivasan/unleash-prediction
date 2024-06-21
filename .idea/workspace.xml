@@ -4,13 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated to-do.">
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated validation_loss() to work with custom dataframes.">
+      <change afterPath="$PROJECT_DIR$/utils/dataset_utils_deprecated.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/time_series_deprecated.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/model_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/model_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/dataset_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +90,7 @@
       <workItem from="1718655949198" duration="4352000" />
       <workItem from="1718724992104" duration="17295000" />
       <workItem from="1718883858436" duration="14371000" />
-      <workItem from="1718964638943" duration="1613000" />
+      <workItem from="1718964638943" duration="8857000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -378,15 +380,29 @@
       <option name="project" value="LOCAL" />
       <updated>1718910147605</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Modified implementation of .predict() method.">
+      <option name="closed" value="true" />
+      <created>1718966547491</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1718966547491</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Updated validation_loss() to work with custom dataframes.">
+      <option name="closed" value="true" />
+      <created>1718966565715</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1718966565715</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added docstrings for functions." />
-    <MESSAGE value="Added TimeSeries class." />
     <MESSAGE value="Modified functionality." />
     <MESSAGE value="Added overriding and TimeSeries.prepare_from_scratch()." />
     <MESSAGE value="Minor debugging." />
@@ -410,6 +426,8 @@
     <MESSAGE value="Updated commit." />
     <MESSAGE value="Updated README." />
     <MESSAGE value="Updated to-do." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated to-do." />
+    <MESSAGE value="Modified implementation of .predict() method." />
+    <MESSAGE value="Updated validation_loss() to work with custom dataframes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated validation_loss() to work with custom dataframes." />
   </component>
 </project>
