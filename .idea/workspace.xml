@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated commit.">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated to-do.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/model_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/model_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +87,8 @@
       <workItem from="1718483785181" duration="18965000" />
       <workItem from="1718655949198" duration="4352000" />
       <workItem from="1718724992104" duration="17295000" />
-      <workItem from="1718883858436" duration="14236000" />
+      <workItem from="1718883858436" duration="14371000" />
+      <workItem from="1718964638943" duration="1613000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -356,14 +362,29 @@
       <option name="project" value="LOCAL" />
       <updated>1718909894584</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Updated README.">
+      <option name="closed" value="true" />
+      <created>1718910027206</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1718910027206</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Updated to-do.">
+      <option name="closed" value="true" />
+      <created>1718910147604</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1718910147605</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Initial commit." />
     <MESSAGE value="Added docstrings for functions." />
     <MESSAGE value="Added TimeSeries class." />
     <MESSAGE value="Modified functionality." />
@@ -382,12 +403,13 @@
     <MESSAGE value="Modified structure.&#10;Added additional automated testing features." />
     <MESSAGE value="Implemented one-hot encoded holidays." />
     <MESSAGE value="Initial implementation of TorchLSTM_v1 model." />
-    <MESSAGE value="Updated README." />
     <MESSAGE value="Updated to include TorchLSTM_v1." />
     <MESSAGE value="Implemented TorchLSTM_v1 (LSTM model)." />
     <MESSAGE value="Testing TorchLSTM_v1." />
     <MESSAGE value="Updated implementation." />
     <MESSAGE value="Updated commit." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated commit." />
+    <MESSAGE value="Updated README." />
+    <MESSAGE value="Updated to-do." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated to-do." />
   </component>
 </project>

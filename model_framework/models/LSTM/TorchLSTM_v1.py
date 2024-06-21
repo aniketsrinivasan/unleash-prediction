@@ -191,19 +191,19 @@ class TorchLSTM_v1:
 
         return
 
-    def predict(self, dataset=None, value_name=None):
+    def predict(self, custom_df=None, value_name=None, datetime_name=None):
         """
         Running predictions on a dataset. Uses the validation data split (df_split_valid) by default.
         To use a custom dataset, pass the pd.DataFrame and Target column name.
 
-        :param dataset:         custom dataset (pd.DataFrame).
+        :param custom_df:       custom dataset (pd.DataFrame).
         :param value_name:      name of Target column for dataset.
         :return:                predictions (as a numpy array) that have been re-scaled.
         """
-        if dataset is None:
-            dataset = self.time_series.df_split_valid
+        if custom_df is None:
+            custom_df = self.time_series.df_split_valid
             value_name = self.target
-        dataset, _ = self.prepare_data(dataset=dataset, value_name=value_name)
+        dataset, _ = self.prepare_data(dataset=custom_df, value_name=value_name)
         # Getting predictions, detaching to numpy (to allow pass through inverse_transform()):
         predictions = self.regressor.forward(dataset).detach().numpy()
         predictions = self.scaler.inverse_transform(predictions)

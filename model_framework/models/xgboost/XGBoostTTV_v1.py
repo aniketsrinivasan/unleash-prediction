@@ -83,41 +83,43 @@ class XGBoostTTV_v1:
         self.predictions = predictions
         return
 
-    def predict(self, custom_df=None):
+    def predict(self, custom_df=None, datetime_name=None, value_name=None):
         """
         Fits the model onto the future data in the TimeSeries using the trained model (by default)
         Requires that the model has been trained via the train() method first.
 
-        If using the custom_df parameter, this dataframe must be created in the same format as the
-        default prediction dataframe. Namely, custom_df must have ALL feature columns, the DateTime AND Target column.
-
-        :param: custom_df:      predict on a custom dataset. must be prepared using TimeSeries.df_create_future()
-        :return:                predictions of the model.
+        :param: custom_df:      predict on a custom dataset.
+        :param: datetime_name:  name of the DateTime column, if custom_df is provided.
+        :param: value_name:     name of the Target column, if custom_df is provided.
+        :return:                predictions of the model (as an array).
         """
         if self.regressor is None:
             raise Exception(f"Regressor has not been trained yet.")
-        # If the future prediction window is larger than the smallest lag:
+        # If a custom dataframe is not provided, set future_dataset to TimeSeries.df_future_only:
         if custom_df is None:
             if self.time_series.df_future_only.shape[0] > self.time_series.lag_min:
                 print(f"SoftWarn: Future window size ({self.time_series.df_future_only.shape[0]}) is larger than "
                       f"the smallest lag ({self.time_series.lag_min}).")
+            # Filling all NaN values with 0 (if they exist), initializing dataset:
+            future_dataset = self.time_series.df_future_only.fillna(0).copy()
+            # Dropping DateTime column (the predictor does not accept the pd.datetime64 format) and
+            #   the Target column (this is what the model is trying to predict):
+            future_dataset = future_dataset.drop(columns=[self.time_series.datetime_name,
+                                                          self.time_series.value_name])
+
+        # Otherwise, use the custom dataframe:
         else:
             if custom_df.shape[0] > self.time_series.lag_min:
                 print(f"SoftWarn: Future window size ({custom_df.shape[0]}) is larger than "
                       f"the smallest lag ({self.time_series.lag_min}).")
-
-        # Filling all NaN values with 0 (if they exist), initializing dataset:
-        if custom_df is not None:
+            if (datetime_name is None) or (value_name is None):
+                raise IndexError("Please provide the DateTime name and Target name.")
+            # Filling all NaN values with 0 (if they exist), initializing dataset:
             future_dataset = custom_df.fillna(0).copy()
-        else:
-            future_dataset = self.time_series.df_future_only.fillna(0).copy()
-        # Dropping DateTime column (the predictor does not accept the pd.datetime64 format) and
-        #   the Target column (this is what the model is trying to predict):
-        try:
-            future_dataset = future_dataset.drop(columns=[self.time_series.datetime_name,
-                                                          self.time_series.value_name])
-        except IndexError:
-            pass
+            # Dropping DateTime column (the predictor does not accept the pd.datetime64 format) and
+            #   the Target column (this is what the model is trying to predict):
+            future_dataset = future_dataset.drop(columns=[datetime_name,
+                                                          value_name])
         # Making prediction:
         prediction = self.regressor.predict(future_dataset)
 
