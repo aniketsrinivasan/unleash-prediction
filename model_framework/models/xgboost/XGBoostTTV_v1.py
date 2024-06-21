@@ -10,7 +10,7 @@ class XGBoostTTV_v1:
         base_score=0.50,                # base "average" to build regression trees from
         booster='gbtree',               # the gradient booster used
         n_estimators=1000,              # number of estimators (trees)
-        early_stopping_rounds=300,      # early stopping rounds if loss plateaus
+        early_stopping_rounds=600,      # early stopping rounds if loss plateaus
         objective="reg:squarederror",   # loss function to use
         max_depth=3,                    # maximum (tree) depth
         learning_rate=0.01              # learning rate for regressor
