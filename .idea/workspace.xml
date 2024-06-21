@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated validation_loss() to work with custom dataframes.">
-      <change afterPath="$PROJECT_DIR$/utils/dataset_utils_deprecated.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/time_series_deprecated.py" afterDir="false" />
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/model_framework/models/about_models.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/dataset_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +54,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/utils/deprecated" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/model_framework/models" />
       <recent name="$PROJECT_DIR$/models/xgboost" />
@@ -90,7 +85,7 @@
       <workItem from="1718655949198" duration="4352000" />
       <workItem from="1718724992104" duration="17295000" />
       <workItem from="1718883858436" duration="14371000" />
-      <workItem from="1718964638943" duration="8857000" />
+      <workItem from="1718964638943" duration="10290000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -396,16 +391,53 @@
       <option name="project" value="LOCAL" />
       <updated>1718966565715</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Deprecated.">
+      <option name="closed" value="true" />
+      <created>1718973564694</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1718973564694</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Overhauled implementation of TimeSeries and dataset_utils.">
+      <option name="closed" value="true" />
+      <created>1718973583365</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1718973583365</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1718973595668</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1718973595668</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Modified kwargs and overall implementation.">
+      <option name="closed" value="true" />
+      <created>1718973610887</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1718973610887</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Modified kwargs and overall implementation.">
+      <option name="closed" value="true" />
+      <created>1718973687762</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1718973687763</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Modified functionality." />
-    <MESSAGE value="Added overriding and TimeSeries.prepare_from_scratch()." />
-    <MESSAGE value="Minor debugging." />
     <MESSAGE value="Implemented MasterModel parent class." />
     <MESSAGE value="Implemented XGBoost models." />
     <MESSAGE value="Removed old models." />
@@ -423,11 +455,14 @@
     <MESSAGE value="Implemented TorchLSTM_v1 (LSTM model)." />
     <MESSAGE value="Testing TorchLSTM_v1." />
     <MESSAGE value="Updated implementation." />
-    <MESSAGE value="Updated commit." />
     <MESSAGE value="Updated README." />
     <MESSAGE value="Updated to-do." />
     <MESSAGE value="Modified implementation of .predict() method." />
     <MESSAGE value="Updated validation_loss() to work with custom dataframes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated validation_loss() to work with custom dataframes." />
+    <MESSAGE value="Deprecated." />
+    <MESSAGE value="Overhauled implementation of TimeSeries and dataset_utils." />
+    <MESSAGE value="Updated commit." />
+    <MESSAGE value="Modified kwargs and overall implementation." />
+    <option name="LAST_COMMIT_MESSAGE" value="Modified kwargs and overall implementation." />
   </component>
 </project>
