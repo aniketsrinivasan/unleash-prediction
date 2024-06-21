@@ -64,16 +64,18 @@ def main():
     # find ways to combine XGBoost and LSTM to come up with predictions.
 
     time_series = TimeSeries(**__kwargs_timeseries_init)
-    time_series.prepare_from_scratch(**__kwargs_timeseries_prepare)
+    time_series.prepare_from_scratch(**__kwargs_timeseries_prepare, kwargs_features=__kwargs_features,
+                                     kwargs_lags=__kwargs_lags)
     print(time_series)
     print(time_series.value_name)
 
-    model = MasterModel(time_series, "TorchLSTM_v1",
+    model = MasterModel(time_series, "XGBoostTTV_v1",
                         read_stub=None,
-                        write_stub="/Users/aniket/PycharmProjects/unleashPredictions/model_framework/models/LSTM/saved_models/lstm_1",
+                        write_stub=None,
                         is_trained=False)
     model.model_create()
     model.model_train()
+    model.model_get_validation_loss()
 
     # tester = ModelTester(__kwargs_timeseries_init, __kwargs_timeseries_prepare,
     #                      __kwargs_features, __kwargs_lags)

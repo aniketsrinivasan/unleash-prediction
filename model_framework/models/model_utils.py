@@ -22,16 +22,19 @@ def validation_loss(model, loss_function="mean_squared_error", verbose=True):
     else:
         raise NotImplementedError(f"Invalid model name: {model.model_name}. Check validation_loss().")
     # Running predictions on this dataset:
-    future_prediction = model.predict(custom_df=df_prediction)
+    future_prediction = model.predict(custom_df=df_prediction, datetime_name=model.time_series.datetime_name,
+                                      value_name=model.time_series.value_name)
     # Getting the validation dataset (labels)
     df_validation = model.time_series.df_split_valid.copy()
 
-    # We check whether there are enough validation datapoints to calculate loss:
-    if df_validation.shape[0] < future_prediction.shape[0]:
-        raise Exception(f"Not enough information to calculate validation loss.")
+    # We check whether there are enough prediction datapoints to calculate loss:
+    if df_validation.shape[0] > future_prediction.shape[0]:
+        raise Exception(f"Not enough information to calculate validation loss. \n"
+                        f"  Size of validation: {df_validation.shape[0]}. \n"
+                        f"  Size of prediction: {future_prediction.shape[0]}. ")
 
     # We take only as many entries as we need (and we are guaranteed to have these many):
-    df_validation = df_validation.iloc[:future_prediction.shape[0]]
+    future_prediction = future_prediction[:df_validation.shape[0]]
 
     # Calculating loss based on the provided loss function:
     if loss_function == "mean_squared_error":
