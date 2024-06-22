@@ -1,5 +1,3 @@
-import pandas as pd
-import numpy as np
 from .xgboost import *
 from .model_utils import validation_loss
 from utils import TimeSeries
@@ -7,111 +5,111 @@ from .LSTM import TorchLSTM_v1
 
 
 class MasterModel:
-    # Here's how the TimeSeries data is used:
-    #   time_series.df_augmented:       typically unused, except for cross-validation model_framework.
-    #   time_series.features:           used as features when predicting.
-    #   time_series.lags:               used as features when predicting.
-    #   time_series.lag_min:            used as a benchmark for the maximum recommended prediction window.
-    #   time_series.value_name:         the Target to predict.
-    #   time_series.df_split_<>:        splits used for training, testing and validation (depending on model).
-    #   time_series.future_<>:          dataset onto which the model predicts (depending on model).
     def __init__(self, time_series: TimeSeries, model_name: str,
-                 read_stub=None, write_stub=None, is_trained=True):
-        """
-        MasterModel uses a TimeSeries, and a provided model name, to create a Model of that type.
-        This acts as a wrapper function to all the Model classes defined.
-
-        :param time_series:     TimeSeries object [must be fully prepared, use prepare_from_scratch()].
-        :param model_name:      the model used, as a str; currently supports: "...".
-        :param read_stub:       stub to load the model.
-        :param write_stub:      stub to save the model.
-        :param is_trained:      whether the model in read_stub is trained.
-        """
-        # Storing the time_series and model_name:
+                 read_from_stub=None, write_to_stub=None, is_trained=True):
+        # Initialize TimeSeries object:
         self.time_series = time_series
+        self.verbose = time_series.verbose
+
+        # Instance information:
         self.model_name = model_name
-
-        # Storing information about reading from and writing to stubs:
-        self.read_stub = read_stub
-        self.write_stub = write_stub
-
-        # Creating a list of features (as column names) for the dataset:
-        self.features = time_series.features + time_series.lags
-        # Target to predict (as a column name):
-        self.target = time_series.value_name
+        # Saving read/write information:
+        self.read_from_stub = read_from_stub
+        self.write_to_stub = write_to_stub
+        # If read_from_stub is provided, then is_trained can be used:
+        self.is_trained = is_trained if (read_from_stub is not None) else False
 
         # Storing information about the model:
-        self.model = None                           # the actual Model object for this instance
-        self.model_kwargs = None                    # storing any special arguments used
-        self.is_trained = is_trained
-        self.model_validation_loss = None           # validation loss
-        self.model_validation_dataframe = None      # df_merged from validation loss
+        self.model = None               # the actual Model object for this instance
+        self.model_kwargs = None        # storing any special arguments used (for saving later)
+
+        # Storing validation information about the model:
+        self.model_validation_loss = None
+        self.model_validation_df = None         # DataFrame containing validation labels and predictions
 
     def model_create(self):
         """
-        Initializes this model's Model and stores it in self.model. Reads from stub if applicable.
+        Initializes this MasterModel's Model (regressor) and stores it in self.model.
+        Reads an existing model from self.read_from_stub if provided. Otherwise, it creates a new
+        instance of the model.
 
         :return:    None.
         """
+        if self.verbose:
+            print(f"Initializing model {self.model_name}...")
+        # Initializing models:
         if self.model_name == "XGBoostCV_v1":
-            self.model = XGBoostCV_v1(self.time_series)
+            self.model = XGBoostCV_v1(time_series=self.time_series,
+                                      read_from_stub=self.read_from_stub,
+                                      write_to_stub=self.write_to_stub)
         elif self.model_name == "XGBoostTTV_v1":
-            self.model = XGBoostTTV_v1(self.time_series)
+            self.model = XGBoostTTV_v1(time_series=self.time_series,
+                                       read_from_stub=self.read_from_stub,
+                                       write_to_stub=self.write_to_stub)
         elif self.model_name == "TorchLSTM_v1":
-            self.model = TorchLSTM_v1(self.time_series, load_model=self.read_stub, save_model=self.write_stub)
+            self.model = TorchLSTM_v1(time_series=self.time_series,
+                                      read_from_stub=self.read_from_stub,
+                                      write_to_stub=self.write_to_stub)
         else:
-            raise ValueError("Model not found. Check whether model_name is correct.")
+            raise ValueError(f"Model {self.model_name} not found. Unable to initialize.")
 
         return
 
     def model_train(self):
         """
-        Trains the model stored in self.model. Stores the trained model back in self.model.
-        Requires that self.model_create() has been run.
+        Trains the model stored in self.model. Requires that self.create() has been run.
+        If self.is_trained is True, then this function is passed and does NOT override the model.
 
-        :return:        None.
+        :return:    None.
         """
+        if self.verbose:
+            print(f"Training model {self.model_name}...")
         if self.is_trained:
-            print(f"Model has already been trained.")
+            print(f"Model {self.model_name} has already been trained. Not continuing training.")
             return
+        # Set the model as trained (to avoid re-training):
         self.is_trained = True
         return self.model.train()
 
-    def model_predict(self, custom_df=None):
-        """
-        Predicts using the Model's predict() method. Recommended that self.is_trained is True.
-
-        :param custom_df:       predicting on a custom DataFrame (optional).
-        :return:                None.
-        """
+    def model_predict(self, custom_df=None, datetime_name=None, value_name=None):
+        if self.verbose:
+            print(f"Running predictions using model {self.model_name}. "
+                  f"Custom DataFrame: {True if custom_df is not None else False}.")
         if not self.is_trained:
-            print(f"SoftWarn: Model ({self.model_name}) is not trained.")
-        return self.model.predict(custom_df)
+            print(f"SoftWarn: Model ({self.model_name}) is not trained. "
+                  f"Use MasterModel.train() before making predictions.")
+        return self.model.predict(custom_df=custom_df, datetime_name=datetime_name, value_name=value_name)
 
-    def model_get_validation_loss(self, loss_function="mean_squared_error", verbose=True):
+    def model_run_validation(self, loss_function="mean_squared_error"):
         """
-        Gets the validation loss of the model on the TimeSeries data of this instance. Saves the information in
-        the object.
+        Runs the model_utils.validation_loss() function on the TimeSeries of this MasterModel.
+        Saves the information in self.model_validation_loss and self.model_validation_df.
 
-        :param loss_function:       the loss metric to use.
-        :param verbose:             prints debugging information.
-        :return:                    tuple[float (loss), pd.DataFrame (validation dataframe)]
-        """
-        self.model_validation_loss, self.model_validation_dataframe = validation_loss(self.model,
-                                                                                      loss_function=loss_function,
-                                                                                      verbose=verbose)
-        return self.model_validation_loss, self.model_validation_dataframe
+        The model_utils.validation_loss() function runs the model's forecasting (prediction)
+        as well as calculates the loss.
 
-    def model_get_dict(self):
+        :return:    tuple[float (loss), pd.DataFrame (validation DataFrame)]
         """
-        Creates a dictionary containing information about the MasterModel:
-            {"model": Model, "hyperparameters": ..., "validation_loss": ..., "validation_df": ...,}
+        self.model_validation_loss, self.model_validation_df = validation_loss(model=self.model,
+                                                                               loss_function=loss_function,
+                                                                               verbose=self.verbose)
+        return self.model_validation_loss, self.model_validation_df
 
-        :return:        dict() of MasterModel information.
+    def get_dict(self):
         """
+                Creates a dictionary containing information about the MasterModel:
+                    {"model": Model, "hyperparameters": ..., "validation_loss": ..., "validation_df": ...,}
+
+                :return:        dict() of MasterModel information.
+                """
+        if self.verbose:
+            print(f"Creating MasterModel dictionary...")
         model_dict = dict()
         model_dict["model"] = self.model
         model_dict["hyperparameters"] = self.model_kwargs
         model_dict["validation_loss"] = self.model_validation_loss
-        model_dict["validation_df"] = self.model_validation_dataframe
+        model_dict["validation_df"] = self.model_validation_df
+        if self.verbose:
+            print(f"MasterModel dictionary created: \n"
+                  f"    {model_dict}.")
         return model_dict

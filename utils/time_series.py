@@ -50,6 +50,7 @@ class TimeSeries:
         self.df_split_test = None
         self.df_split_test_last_n = None    # last "n" entries of testing split
         self.df_split_valid = None
+        self.df_split_valid_last_n = None   # last "n" entries of validation split
 
         # Initializing future (only) and future (appended) dataframes:
         self.df_future_only = None
@@ -73,9 +74,9 @@ class TimeSeries:
             lag_min:                {self.lag_min} (entries)
 
             split_ratio:            {self.split_ratio} (train/test/valid)
-            df_split_train:         {self.df_split_train.shape}
-            df_split_test:          {self.df_split_test.shape}
-            df_split_valid:         {self.df_split_valid.shape}
+            df_split_train:         {None if (self.df_split_train is None) else self.df_split_train.shape}
+            df_split_test:          {None if (self.df_split_test is None) else self.df_split_test.shape}
+            df_split_valid:         {None if (self.df_split_valid is None) else self.df_split_valid.shape}
         '''
         return string
 
@@ -184,9 +185,9 @@ class TimeSeries:
                                                          verbose=self.verbose)
         # Storing the split ratio and dataframes:
         self.split_ratio = split_ratio
-        self.df_split_train = train.copy()
-        self.df_split_test = test.copy()
-        self.df_split_valid = valid.copy()
+        self.df_split_train = train
+        self.df_split_test = test
+        self.df_split_valid = valid
         return
 
     def df_create_future(self, window_size: int, step_size: str,
@@ -230,8 +231,8 @@ class TimeSeries:
 
         # Updating and/or returning as required:
         if update_self:
-            self.df_future_only = df_future_only.copy()
-            self.df_future_concat = df_future_concat.copy()
+            self.df_future_only = df_future_only
+            self.df_future_concat = df_future_concat
             return
         else:
             return df_future_only, df_future_concat
@@ -241,15 +242,16 @@ class TimeSeries:
         if kwargs_last_n is None:
             kwargs_last_n = self.kwargs_last_n
         # Setting df_last_n, df_split_train_last_n, df_split_test_last_n:
-        if self.df_augmented is not None:
-            self.df_last_n = data_get_last_n(dataframe=self.df_augmented, verbose=self.verbose,
-                                             **kwargs_last_n)
-        if self.df_split_train is not None:
-            self.df_split_train_last_n = data_get_last_n(dataframe=self.df_split_train, verbose=self.verbose,
-                                                         **kwargs_last_n)
-        if self.df_split_test is not None:
-            self.df_split_test_last_n = data_get_last_n(dataframe=self.df_split_test, verbose=self.verbose,
-                                                        **kwargs_last_n)
+        #   note: data_get_last_n() already checks if dataframe is None.
+        #         If so, it simply returns None.
+        self.df_last_n = data_get_last_n(dataframe=self.df_augmented, verbose=self.verbose,
+                                         **kwargs_last_n)
+        self.df_split_train_last_n = data_get_last_n(dataframe=self.df_split_train, verbose=self.verbose,
+                                                     **kwargs_last_n)
+        self.df_split_test_last_n = data_get_last_n(dataframe=self.df_split_test, verbose=self.verbose,
+                                                    **kwargs_last_n)
+        self.df_split_valid_last_n = data_get_last_n(dataframe=self.df_split_valid, verbose=self.verbose,
+                                                     **kwargs_last_n)
         return
 
     def prepare_from_scratch(self, kwargs_last_n=None, split_ratio=None, kwargs_features=None,
