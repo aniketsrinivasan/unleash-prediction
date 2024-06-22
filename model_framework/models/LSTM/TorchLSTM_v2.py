@@ -4,13 +4,14 @@ from torch.autograd import Variable
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 import os
+import pandas as pd
 from utils import TimeSeries
 
 
 class BaseLSTM(nn.Module):
     # Hyperparameters for the LSTM:
-    __INPUT_SIZE = 50
-    __HIDDEN_SIZE = 512
+    __INPUT_SIZE = 250
+    __HIDDEN_SIZE = 1024
     __NUM_LAYERS = 3
     __DROPOUT = 0.2
     # Size of the fully connected layer (at the end):
@@ -77,11 +78,12 @@ class TorchLSTM_v1:
     # LSTM hyperparameters:
     __NUM_CLASSES = 1            # how many output features are desired
     __LEARNING_RATE = 0.0001     # learning rate for optimizer (Adam)
-    __EPOCHS = 1000
+    __BATCH_SIZE = 32            # how many input sequences to process per training batch
+    __EPOCHS = 100               # how many epochs to train (with entire dataset, in batches)
     __DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # How far to predict into the future (in entries), used by TorchLSTM_v1.predict():
-    __N_FUTURE = 50
+    __N_FUTURE = 200
 
     def __init__(self, time_series: TimeSeries, read_from_stub=None, write_to_stub=None):
         # Storing this TimeSeries and its data information:
@@ -107,7 +109,7 @@ class TorchLSTM_v1:
         # Creating the Scaler used (for numerical stability with activation functions):
         self.scaler = StandardScaler()
 
-    def prepare_data(self, dataset=None, value_name=None):
+    def prepare_data(self, dataset=None, value_name=None, is_array=False):
         """
         Prepares the data to work with the BaseLSTM architecture. By default, the dataset used is
         the training split (TimeSeries.df_split_train) of this TimeSeries.
@@ -127,18 +129,23 @@ class TorchLSTM_v1:
         if dataset is None:
             dataset = self.time_series.df_split_train
             value_name = self.target
-        elif value_name is None:
+        elif (value_name is None) and (not is_array):
             raise IndexError(f"Custom dataset was provided, but without a Target column name.")
         # If the lookback is larger than the dataset itself, then end:
         if dataset.shape[0] <= self.__lookback:
             raise IndexError(f"Dataset ({dataset.shape[0]}) is <= the lookback ({self.__lookback}). "
                              f"Change input size (__INPUT_SIZE) in BaseLSTM implementation, or "
                              f"increase the number of entries provided for lookback.")
-        # Conversion of the Target column into an array of shape (len(dataset), 1)
-        try:
-            dataset = np.array(dataset[value_name]).reshape(-1, 1)
-        except Exception as e:
-            raise IndexError(f"Error {e}. Does dataset contain a column {value_name}?")
+
+        # Conversion of the Target column (or array) into an array of shape (len(dataset), 1)
+        if not is_array:
+            try:
+                dataset = np.array(dataset[value_name]).reshape(-1, 1)
+            except Exception as e:
+                raise IndexError(f"Error {e}. Does dataset contain a column {value_name}?")
+        else:
+            dataset = np.array(dataset).reshape(-1, 1)
+
         # Applying the Scaler transformation to the dataset:
         dataset = self.scaler.fit_transform(dataset)
 
@@ -170,24 +177,31 @@ class TorchLSTM_v1:
 
         :return:    None.
         """
-        # Prepare the training data (prepare_data uses time_series.df_split_train by default):
-        X_train, y_train = self.prepare_data()
-        print(X_train.shape)
-        print(self.regressor)
+        value_name = self.time_series.value_name
 
-        # Training loop:
+        # Iterating over epochs:
         for epoch in range(self.__EPOCHS):
-            output = self.regressor.forward(X_train)    # forward-propagation
-            self.optimizer.zero_grad()                  # zero-grad
+            # Iterating over batches:
+            #   starts at 0, stops at (length-__lookback), steps by batch_size.
+            #   stopping at (length-__lookback) is necessary to ensure at least __lookback inputs are provided.
+            for batch in range(0, self.time_series.df_split_train.shape[0]-self.__lookback, self.__BATCH_SIZE):
+                # This batch's dataset is extracted from all the training data:
+                this_dataset = self.time_series.df_split_train.iloc[batch:(batch+self.__BATCH_SIZE+self.__lookback)]
+                # Preparing this batch's dataset to pass into regressor.forward():
+                X_train, y_train = self.prepare_data(dataset=this_dataset, value_name=value_name)
 
-            # Calculating loss and performing back-propagation:
-            loss = self.loss_function(output, y_train)
-            loss.backward()
-            self.optimizer.step()
+                # Forward-propagation:
+                this_output = self.regressor.forward(X_train)
+                self.optimizer.zero_grad()
 
-            # Printing training loop information (every 100 epochs):
-            if (self.verbose) and (epoch % 100 == 0):
-                print(f"Epoch: {epoch}, Loss: {loss.item():.5f}")
+                # Calculating loss and performing back-propagation:
+                this_loss = self.loss_function(this_output, y_train)
+                this_loss.backward()
+                self.optimizer.step()
+
+            # Printing training loop information (every 5 epochs):
+            if self.verbose and (epoch % 5 == 0):
+                print(f"Epoch: {epoch}, Loss: {this_loss.item():.5f}")
 
         # Saving model:
         if (self.write_to_stub is not None) and os.path.exists(self.write_to_stub):
@@ -196,10 +210,13 @@ class TorchLSTM_v1:
 
         return
 
+
     def predict(self, custom_df=None, value_name=None, datetime_name=None):
         """
         Running predictions on a dataset. Uses the validation data split (df_split_valid) by default.
         To use a custom dataset, pass the pd.DataFrame and Target column name.
+
+        This function uses recursive prediction calls.
 
         :param custom_df:       custom dataset (pd.DataFrame).
         :param value_name:      name of Target column for dataset.
@@ -207,12 +224,42 @@ class TorchLSTM_v1:
         :return:                predictions (as a numpy array) that have been re-scaled.
         """
         if custom_df is None:
-            custom_df = self.time_series.df_split_valid_last_n
+            if self.time_series.df_split_valid_last_n.shape[0] > self.__lookback:
+                # Only consider as many entries as necessary:
+                custom_df = self.time_series.df_split_valid_last_n.iloc[:self.__lookback+1]
+            else:
+                raise IndexError(f"Custom DataFrame not provided for prediction, but the "
+                                 f"last 'n' of TimeSeries.df_split_valid is not long enough. \n"
+                                 f"    lookback:   {self.__lookback} \n"
+                                 f"    last 'n':   {self.time_series.df_split_valid_last_n.shape[0]}.")
             value_name = self.target
         dataset, _ = self.prepare_data(dataset=custom_df, value_name=value_name)
+
+        predictions_so_far = np.array([])
+        softwarn_bool = False       # used if predictions become unstable (go past known range)
         # Getting predictions, detaching to numpy (to allow pass through inverse_transform()):
-        predictions = self.regressor.forward(dataset).detach().numpy()
-        print(predictions)
-        predictions = self.scaler.inverse_transform(predictions)
-        print(predictions)
+        for N in range(0, self.__N_FUTURE):
+            # Creating an for our current data, based on known and predicted values:
+            if N <= custom_df.shape[0]:
+                known_array = np.array(list(custom_df[value_name].iloc[N:]))
+                predicted_array = predictions_so_far[:N]
+                array_to_predict = np.concatenate((known_array, predicted_array))
+            else:
+                if softwarn_bool:
+                    print(f"SoftWarn: Predicting beyond known values range. Accuracy may "
+                          f"be unstable. Proceed with caution.")
+                    softwarn_bool = True
+                array_to_predict = predictions_so_far[-self.__lookback-1:]
+
+            # Running predictions on our current data to get one prediction value:
+            this_dataset, _ = self.prepare_data(dataset=array_to_predict, is_array=True)
+            this_prediction = self.regressor.forward(this_dataset).detach().numpy()
+            this_prediction = self.scaler.inverse_transform(this_prediction)
+
+            # Adding this prediction value to the DataFrame of predictions thus far:
+            predictions_so_far = np.append(predictions_so_far, this_prediction[0][0])
+
+        # predictions = self.regressor.forward(dataset).detach().numpy()
+        # print(predictions)
+        predictions = np.array([[x] for x in predictions_so_far])
         return predictions
