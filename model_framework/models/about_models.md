@@ -16,7 +16,7 @@ class Model_vn:
         ...
     )
     
-    def __init__(self, time_series: TimeSeries, ...):
+    def __init__(self, time_series: TimeSeries, read_from_stub=None, write_to_stub=None, ...):
         self.time_series = time_series
         self.target = ...       # [Target for prediction]
         self.features = ...     # [Features for prediction]
