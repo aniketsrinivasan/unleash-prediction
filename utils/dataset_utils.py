@@ -252,9 +252,9 @@ def data_split_train_test_valid(dataframe: pd.DataFrame, ratio: list[float], ver
     valid_size = int(dataset_len * ratio[2])
 
     # Splitting by sizes:
-    data_train = dataframe.iloc[:train_size]
-    data_test = dataframe.iloc[train_size:train_size + test_size]
-    data_valid = dataframe.iloc[-valid_size:]
+    data_train = dataframe.iloc[:train_size] if (train_size > 0) else None
+    data_test = dataframe.iloc[train_size:train_size + test_size] if (test_size > 0) else None
+    data_valid = dataframe.iloc[-valid_size:] if (valid_size > 0) else None
 
     return data_train, data_test, data_valid
 
@@ -302,6 +302,8 @@ def data_get_last_n(dataframe: pd.DataFrame, window_base=1, window_multiple=None
     Consumes a pd.DataFrame, a window_base and a window_multiple to get the last "n" (window_base * window_multiple)
     entries from the provided DataFrame. If the DataFrame is not large enough, the entire DataFrame is returned.
 
+    If the DataFrame dataframe is None, then the function automatically returns None.
+
     :param dataframe:           DataFrame to get last entries from.
     :param window_base:         a base value for the window (set to 1 by default).
     :param window_multiple:     a window multiplier.
@@ -310,6 +312,9 @@ def data_get_last_n(dataframe: pd.DataFrame, window_base=1, window_multiple=None
     """
     if verbose:
         print(f"Getting last {window_base * window_multiple} entries from the provided DataFrame.")
+    if dataframe is None:
+        print(f"SoftWarm: Trying to create last_n on a None DataFrame. Returning None.")
+        return
     if window_base * window_multiple > dataframe.shape[0]:
         print(f"SortWarn: Trying to get {window_base * window_multiple} from a DataFrame of size "
               f"{dataframe.shape[0]}. Returning the entire DataFrame.")
