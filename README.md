@@ -58,6 +58,7 @@ Update (22/06/2024):
   * TorchLSTM_v1: All-in-one data training. Predictions are not recursive (multi-step).
   * TorchLSTM_v2: Batch-wise training with custom batch sizes (suited for large datasets). 
       Predictions are recursive (multi-step).
+* Trained multiple LSTM models to test hyperparameters on various sizes of dataset.
 
 
 # How to Use:
