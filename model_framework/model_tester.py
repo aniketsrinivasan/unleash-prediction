@@ -1,5 +1,6 @@
 from .models import MasterModel
 from utils import TimeSeries
+import matplotlib.pyplot as plt
 # Idea: test and compare various model_framework easily.
 
 # functions to implement:
@@ -24,50 +25,43 @@ from utils import TimeSeries
 
 
 class ModelTester:
-    def __init__(self, kwargs_timeseries_init, kwargs_timeseries_prepare,
-                 kwargs_features=None, kwargs_lags=None):
+    def __init__(self, kwargs_timeseries_init, models_init):
         self.time_series = TimeSeries(**kwargs_timeseries_init)
-        self.time_series.prepare_from_scratch(**kwargs_timeseries_prepare,
-                                              kwargs_features=kwargs_features,
-                                              kwargs_lags=kwargs_lags)
+        self.time_series.prepare_from_scratch()
 
         self.kwargs_timeseries_init = kwargs_timeseries_init        # saving args used for TimeSeries init
-        self.kwargs_timeseries_prepare = kwargs_timeseries_prepare  # saving args used for TimeSeries prepare
-
-        # Storing a list of model_framework:
-        self.model_list = ["XGBoostCV_v1", "XGBoostTTV_v1", "TorchLSTM_v1"]     # automate this later
+        self.models_init = models_init                              # saving args used for Model init
 
         # Initializing an empty dictionary to save trained model_framework and results:
         self.model_dict = None
-        # When actually creating a savefile for ModelTester, make sure to also save all information
-        #   needed to initialize the TimeSeries.
-        # Do not save pre-trained model_framework. Only save the TimeSeries information and hyperparameters used
-        #   (this is for memory efficiency).
 
-    def create_model_dict(self, train=False, validate=False, loss_function="mean_squared_error",
-                          read_from_stubs=False, write_to_stubs=False, stub_dir=None, verbose=True):
+    def create_model_dict(self, train=False, validate=False,
+                          loss_function="mean_squared_error", verbose=True):
         # Fully initializing model_dict with the following structure:
         #   {model_name: MasterModel}
         if verbose:
             print(f"Initializing model dictionary for ModelTester...")
         model_dict = dict()
 
-        for model in self.model_list:
+        # Iterating over the keys in self.models_init (which are Model names):
+        for model in self.models_init:
             if verbose:
                 print(f"Creating model {model}:")
             # Initializing this model (using MasterModel):
-            this_model = MasterModel(time_series=self.time_series, model_name=model)
+            this_model = MasterModel(time_series=self.time_series, model_name=model,
+                                     **self.models_init[model])
             this_model.model_create()
             # If train is True, then we train the model:
             if train:
                 if verbose:
                     print(f"Training model {model}...")
+                # This training only occurs if Model.is_trained is False:
                 this_model.model_train()
             # If validate is True, then we run validation with verbose=False:
             if validate:
                 if verbose:
                     print(f"Validating model {model}...")
-                this_model.model_get_validation_loss(loss_function=loss_function, verbose=verbose)
+                this_model.model_run_validation(loss_function=loss_function)
             model_dict[model] = this_model
 
         # Saving model_dict in the instance:
@@ -108,7 +102,7 @@ class ModelTester:
             if override or (master_model.model_validation_loss is None):
                 if verbose:
                     print(f"Validating model {master_model.model_name}...")
-                master_model.model_get_validation_loss(loss_function, verbose=verbose)
+                master_model.model_run_validation(loss_function)
             elif verbose:
                 print(f"Model {master_model.model_name} already validated. Skipping.")
         return
@@ -124,3 +118,19 @@ class ModelTester:
             losses[master_model.model_name] = master_model.model_validation_loss
         print(losses)
         return losses
+
+    def plot_validation_losses(self):
+        # Extracting the MasterModel.model_validation_df for each MasterModel:
+        combined_df = self.time_series.df_split_valid[[self.time_series.datetime_name,
+                                                       self.time_series.value_name]].copy()
+        combined_df.set_index(self.time_series.datetime_name, inplace=True)
+
+        for model in list(self.model_dict.values()):
+            combined_df[model.model_name] = model.model_validation_df[f"Prediction_{model.model_name}"]
+
+        # Plotting:
+        combined_df.plot()
+        plt.show()
+
+        return
+
