@@ -51,6 +51,14 @@ Update (21/06/2024):
     implementation of TorchLSTM_v1.
 * Updated main.py hyperparameters to fit new TimeSeries implementation.
 
+Update (22/06/2024):
+* Updated model testing framework to plot predictions and accomodate model initialization
+    parameters on a MasterModel-basis.
+* Implemented TorchLSTM_v2:
+  * TorchLSTM_v1: All-in-one data training. Predictions are not recursive (multi-step).
+  * TorchLSTM_v2: Batch-wise training with custom batch sizes (suited for large datasets). 
+      Predictions are recursive (multi-step).
+
 
 # How to Use:
 To be implemented.

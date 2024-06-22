@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Added experimentation file.">
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets).">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/model_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/deprecated/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/deprecated/master_model_deprecated.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/deprecated/model_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/deprecated/model_utils_deprecated.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/master_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/model_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/model_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,31 +90,7 @@
       <workItem from="1718883858436" duration="14371000" />
       <workItem from="1718964638943" duration="20427000" />
       <workItem from="1718996358237" duration="16094000" />
-      <workItem from="1719052448428" duration="4328000" />
-    </task>
-    <task id="LOCAL-00003" summary="Added TimeSeries class.">
-      <option name="closed" value="true" />
-      <created>1718205166581</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1718205166581</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Modified functionality.">
-      <option name="closed" value="true" />
-      <created>1718212209038</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1718212209038</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Added overriding and TimeSeries.prepare_from_scratch().">
-      <option name="closed" value="true" />
-      <created>1718212242617</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1718212242617</updated>
+      <workItem from="1719052448428" duration="5141000" />
     </task>
     <task id="LOCAL-00006" summary="Minor debugging.">
       <option name="closed" value="true" />
@@ -490,15 +460,37 @@
       <option name="project" value="LOCAL" />
       <updated>1719052824785</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1719057026996</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1719057026996</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Updated testing framework.">
+      <option name="closed" value="true" />
+      <created>1719057046904</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1719057046904</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets).">
+      <option name="closed" value="true" />
+      <created>1719057091189</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1719057091189</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated ModelTester framework." />
-    <MESSAGE value="Updated Model(s) implementation." />
     <MESSAGE value="Updated MasterModel framework to control Model(s)." />
     <MESSAGE value="Modified structure.&#10;Added additional automated testing features." />
     <MESSAGE value="Implemented one-hot encoded holidays." />
@@ -516,12 +508,14 @@
     <MESSAGE value="Modified kwargs and overall implementation." />
     <MESSAGE value="Information about model implementations." />
     <MESSAGE value="Modified implementation of data_split_train_test_valid() to allow optional splits. &#10;&#10;Modified data_get_last_n() to allow None DataFrames." />
-    <MESSAGE value="Updated commit." />
     <MESSAGE value="Modified implementation to include read_from_stub and write_to_stub." />
     <MESSAGE value="Deprecated files." />
     <MESSAGE value="Significant overhaul of underlying framework to better support LSTM models." />
     <MESSAGE value="Updated LSTM models." />
     <MESSAGE value="Added experimentation file." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added experimentation file." />
+    <MESSAGE value="Updated commit." />
+    <MESSAGE value="Updated testing framework." />
+    <MESSAGE value="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets)." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets)." />
   </component>
 </project>

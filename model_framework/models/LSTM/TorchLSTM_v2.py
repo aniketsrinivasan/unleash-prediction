@@ -252,7 +252,8 @@ class TorchLSTM_v2:
 
             # Running predictions on our current data to get one prediction value:
             this_dataset, _ = self.prepare_data(dataset=array_to_predict, is_array=True)
-            this_prediction = self.regressor.forward(this_dataset).detach().numpy()
+            with torch.no_grad():
+                this_prediction = self.regressor.forward(this_dataset).detach().numpy()
             this_prediction = self.scaler.inverse_transform(this_prediction)
 
             # Adding this prediction value to the DataFrame of predictions thus far:

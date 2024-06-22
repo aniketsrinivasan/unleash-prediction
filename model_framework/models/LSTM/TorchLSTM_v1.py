@@ -211,7 +211,8 @@ class TorchLSTM_v1:
             value_name = self.target
         dataset, _ = self.prepare_data(dataset=custom_df, value_name=value_name)
         # Getting predictions, detaching to numpy (to allow pass through inverse_transform()):
-        predictions = self.regressor.forward(dataset).detach().numpy()
+        with torch.no_grad():
+            predictions = self.regressor.forward(dataset).detach().numpy()
         print(predictions)
         predictions = self.scaler.inverse_transform(predictions)
         print(predictions)
