@@ -19,7 +19,7 @@ class XGBoostCV_v1:
     # Number of splits to use for cross-validation:
     __SPLITS = 8
 
-    def __init__(self, time_series: TimeSeries):
+    def __init__(self, time_series: TimeSeries, read_from_stub=None, write_to_stub=None):
         """
         Creates an XGBoostCV object (which uses cross-validation with XGBoostRegressor) to model the
         given TimeSeries (time_series) data.
@@ -34,6 +34,9 @@ class XGBoostCV_v1:
         self.target = time_series.value_name
 
         self.model_name = "XGBoostCV_v1"
+        self.read_from_stub = read_from_stub
+        self.write_to_stub = write_to_stub
+
         # Creating a TimeSeriesSplit (for cross-validation) with default test_size (gap 0):
         self.time_series_split = TimeSeriesSplit(n_splits=self.__SPLITS)
 

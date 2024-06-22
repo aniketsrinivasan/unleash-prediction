@@ -16,7 +16,7 @@ class XGBoostTTV_v1:
         learning_rate=0.01              # learning rate for regressor
     )
 
-    def __init__(self, time_series: TimeSeries):
+    def __init__(self, time_series: TimeSeries, read_from_stub=None, write_to_stub=None):
         """
         Creates an XGBoostTTV object (uses XGBoostRegressor) to model the given TimeSeries (time_series)
         data.
@@ -31,6 +31,8 @@ class XGBoostTTV_v1:
         self.target = time_series.value_name
 
         self.model_name = "XGBoostTTV_v1"
+        self.read_from_stub = read_from_stub
+        self.write_to_stub = write_to_stub
 
         # Initializing a saved model with scores and cross-validation predictions:
         self.regressor = None

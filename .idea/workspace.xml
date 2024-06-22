@@ -4,9 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/model_framework/models/about_models.md" afterDir="false" />
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Information about model implementations.">
+      <change afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_framework/models/LSTM/torch_dataset.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_framework/models/deprecated/master_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_framework/models/deprecated/model_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/about_models.md" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/about_models.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/master_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/model_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/model_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/dataset_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,8 +68,9 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/utils/deprecated" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/model_framework/models/deprecated" />
+      <recent name="$PROJECT_DIR$/utils/deprecated" />
       <recent name="$PROJECT_DIR$/model_framework/models" />
       <recent name="$PROJECT_DIR$/models/xgboost" />
     </key>
@@ -85,7 +100,8 @@
       <workItem from="1718655949198" duration="4352000" />
       <workItem from="1718724992104" duration="17295000" />
       <workItem from="1718883858436" duration="14371000" />
-      <workItem from="1718964638943" duration="10290000" />
+      <workItem from="1718964638943" duration="20427000" />
+      <workItem from="1718996358237" duration="16094000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -431,14 +447,21 @@
       <option name="project" value="LOCAL" />
       <updated>1718973687763</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Information about model implementations.">
+      <option name="closed" value="true" />
+      <created>1718977306579</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1718977306579</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Implemented MasterModel parent class." />
     <MESSAGE value="Implemented XGBoost models." />
     <MESSAGE value="Removed old models." />
     <MESSAGE value="Restructured directories." />
@@ -463,6 +486,7 @@
     <MESSAGE value="Overhauled implementation of TimeSeries and dataset_utils." />
     <MESSAGE value="Updated commit." />
     <MESSAGE value="Modified kwargs and overall implementation." />
-    <option name="LAST_COMMIT_MESSAGE" value="Modified kwargs and overall implementation." />
+    <MESSAGE value="Information about model implementations." />
+    <option name="LAST_COMMIT_MESSAGE" value="Information about model implementations." />
   </component>
 </project>

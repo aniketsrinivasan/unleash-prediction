@@ -1,6 +1,7 @@
 from model_framework import *
 from utils import TimeSeries
 import matplotlib.pyplot as plt
+import requests
 
 # ~~~~~~~~~~~~~~~~~ HYPERPARAMETERS AND OTHER INFO ~~~~~~~~~~~~~~~~~
 #                           FOR THE USER
@@ -15,7 +16,7 @@ __kwargs_timeseries_future = dict(
 # =======================  HYPERPARAMETERS  ========================
 # Arguments to modify the creation of time-series features:
 __kwargs_features = dict(
-    hours=False,
+    hours=True,
     days_of_week=True,
     weeks=True,
     days_of_month=True,
@@ -25,9 +26,9 @@ __kwargs_features = dict(
     holidays_province=None,
 )
 # Arguments to modify the lag values created as features:
-__lag_base = 28
-__lag_multiples = [3, 6, 12]
-__lag_label = "d"
+__lag_base = 24*7
+__lag_multiples = [1, 4, 12]
+__lag_label = "m"
 __kwargs_lags = dict(
     lag_base=__lag_base,
     lag_multiples=__lag_multiples,
@@ -37,15 +38,15 @@ __kwargs_lags = dict(
 # Last "n" kwargs:
 __kwargs_last_n = dict(
     window_base=1,
-    window_multiple=1
+    window_multiple=301,
 )
 
 __kwargs_timeseries_init = dict(
-    csv_path="/Users/aniket/PycharmProjects/unleashPredictions/Electric_Production.csv",
-    datetime_name="DATE",
-    datetime_format="%d/%m/%Y",
-    value_name="IPG2211A2N",
-    split_ratio=[0.7, 0.1, 0.2],
+    csv_path="/Users/aniket/PycharmProjects/unleashPredictions/energy_data_short.csv",
+    datetime_name="Datetime",
+    datetime_format="%Y-%m-%d %H:%M:%S",
+    value_name="PJMW_MW",
+    split_ratio=[0.8, 0.15, 0.05],
     kwargs_features=__kwargs_features,
     kwargs_lags=__kwargs_lags,
     kwargs_last_n=__kwargs_last_n,
@@ -78,13 +79,13 @@ def main():
     print(time_series)
     print(time_series.value_name)
 
-    model = MasterModel(time_series, "XGBoostTTV_v1",
-                        read_stub=None,
-                        write_stub=None,
-                        is_trained=False)
+    model = MasterModel(time_series, "TorchLSTM_v1",
+                        read_from_stub="/Users/aniket/PycharmProjects/unleashPredictions/model_framework/models/LSTM/saved_models/lstm_5",
+                        write_to_stub=None,
+                        is_trained=True)
     model.model_create()
     model.model_train()
-    model.model_get_validation_loss()
+    model.model_run_validation()
 
     # tester = ModelTester(__kwargs_timeseries_init, __kwargs_timeseries_prepare,
     #                      __kwargs_features, __kwargs_lags)
