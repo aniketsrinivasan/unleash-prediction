@@ -10,14 +10,14 @@ class XGBoostCV_v1:
     __kwargs_hyperparams = dict(
         base_score=0.50,                # base "average" to build regression trees from
         booster='gbtree',               # the gradient booster used
-        n_estimators=400,               # number of estimators (trees)
+        n_estimators=600,               # number of estimators (trees)
         early_stopping_rounds=300,      # early stopping rounds if loss plateaus
         objective="reg:squarederror",   # loss function to use
         max_depth=4,                    # maximum (tree) depth
         learning_rate=0.01              # learning rate for regressor
     )
     # Number of splits to use for cross-validation:
-    __SPLITS = 8
+    __SPLITS = 10
 
     def __init__(self, time_series: TimeSeries, read_from_stub=None, write_to_stub=None):
         """

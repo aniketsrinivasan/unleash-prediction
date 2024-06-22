@@ -4,11 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets).">
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated commit.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/model_tester.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/master_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/model_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/model_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,15 +97,8 @@
       <workItem from="1718883858436" duration="14371000" />
       <workItem from="1718964638943" duration="20427000" />
       <workItem from="1718996358237" duration="16094000" />
-      <workItem from="1719052448428" duration="5141000" />
-    </task>
-    <task id="LOCAL-00006" summary="Minor debugging.">
-      <option name="closed" value="true" />
-      <created>1718308202041</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1718308202041</updated>
+      <workItem from="1719052448428" duration="5162000" />
+      <workItem from="1719061535416" duration="9884000" />
     </task>
     <task id="LOCAL-00007" summary="Implemented MasterModel parent class.">
       <option name="closed" value="true" />
@@ -484,7 +484,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719057091189</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1719057611468</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1719057611469</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -513,9 +521,9 @@
     <MESSAGE value="Significant overhaul of underlying framework to better support LSTM models." />
     <MESSAGE value="Updated LSTM models." />
     <MESSAGE value="Added experimentation file." />
-    <MESSAGE value="Updated commit." />
     <MESSAGE value="Updated testing framework." />
     <MESSAGE value="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets)." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets)." />
+    <MESSAGE value="Updated commit." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated commit." />
   </component>
 </project>

@@ -15,7 +15,7 @@ __models_init_dict = {
         is_trained=False,
     ),
     "TorchLSTM_v2": dict(
-        read_from_stub=f"{ROOT_DIR}model_framework/models/LSTM/saved_models/lstm_5",
+        read_from_stub=f"{ROOT_DIR}model_framework/models/LSTM/saved_models/lstm_energy_data_500",
         write_to_stub=None,
         is_trained=True,
     )
@@ -30,6 +30,7 @@ def main():
     tester.run_validation()
     tester.get_validation_losses()
     tester.plot_validation_losses()
+    tester.plot_validation_mean()
 
 
 if __name__ == "__main__":

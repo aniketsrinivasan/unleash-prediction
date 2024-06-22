@@ -92,6 +92,7 @@ def validation_loss(model, loss_function="mean_squared_error", verbose=True):
     if verbose:
         print(loss)
         df_merged.plot()
+        plt.ylim(bottom=0)
         plt.show()
 
     return loss, df_merged

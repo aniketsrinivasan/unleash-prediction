@@ -27,7 +27,7 @@ __kwargs_features = dict(
 )
 # Arguments to modify the lag values created as features:
 __lag_base = 24*7
-__lag_multiples = [2, 4, 12]
+__lag_multiples = [6, 12]
 __lag_label = "m"
 __kwargs_lags = dict(
     lag_base=__lag_base,
@@ -38,15 +38,15 @@ __kwargs_lags = dict(
 # Last "n" kwargs:
 __kwargs_last_n = dict(
     window_base=1,
-    window_multiple=301,
+    window_multiple=TorchLSTM_v2_LOOKBACK+1,
 )
 
 __kwargs_timeseries_init = dict(
-    csv_path=f"{__PATH}/energy_data_short_4k_10k.csv",
+    csv_path=f"{__PATH}/energy_data_short_10k_16k.csv",
     datetime_name="Datetime",
     datetime_format="%Y-%m-%d %H:%M:%S",
     value_name="PJMW_MW",
-    split_ratio=[0.8, 0.175, 0.025],
+    split_ratio=[0.7, 0.23, 0.07],
     kwargs_features=__kwargs_features,
     kwargs_lags=__kwargs_lags,
     kwargs_last_n=__kwargs_last_n,
@@ -74,6 +74,19 @@ def main():
     # implement saving and loading models properly
     # find ways to combine XGBoost and LSTM to come up with predictions.
     # implement dynamic usage of create_last_n based on how many entries are needed
+
+    # when taking average of all three models' predictions, try some "scheduling"-type average where:
+    #   LSTM's importance takes precedence in the initial portion of predictions
+    #   XGBoost's importance increases over length of predictions
+    # find way to train XGBoost on ALL training data, and then predict on validation,
+    #   but LSTM trains on a set quantity of "most recent" data (say 100k entries) and then
+    #   predicts.
+    # minute-wise predictions can be made by XGBoost, but hour-wise predictions by LSTM
+    #   (this way 4 weeks of hourly predictions = 672 entries, which is a reasonable lookback).
+    #   note: LSTM can be used to predict other low-frequency intervals similarly (e.g. day-wise)
+    #         so the predictive power can really extend as far as necessary
+    #   note: each interval would need its own trained LSTM model
+    # hour-wise predictions can be fed into XGBoost as a feature, in order to predict minute-wise.
 
     time_series = TimeSeries(**__kwargs_timeseries_init)
     time_series.prepare_from_scratch()

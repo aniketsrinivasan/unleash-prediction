@@ -7,9 +7,14 @@ import os
 from utils import TimeSeries
 
 
-class BaseLSTM(nn.Module):
+# Hyperparameters set to a global scope for ease of access when modifying:
+TorchLSTM_v2_LOOKBACK = 500        # number of inputs (do not modify unless re-training)
+TorchLSTM_v2_N_FUTURE = 500         # number of predictions (safe to modify)
+
+
+class BaseLSTM_v2(nn.Module):
     # Hyperparameters for the LSTM:
-    __INPUT_SIZE = 250
+    __INPUT_SIZE = TorchLSTM_v2_LOOKBACK
     __HIDDEN_SIZE = 1024
     __NUM_LAYERS = 3
     __DROPOUT = 0.2
@@ -30,7 +35,7 @@ class BaseLSTM(nn.Module):
 
         :param num_classes:     number of outputs desired (per sequence input).
         """
-        super(BaseLSTM, self).__init__()
+        super(BaseLSTM_v2, self).__init__()
         # Setting instance information:
         self.num_classes = num_classes
         self.input_size = self.__INPUT_SIZE     # accessed by TorchLSTM_v1 later
@@ -76,15 +81,16 @@ class BaseLSTM(nn.Module):
 class TorchLSTM_v2:
     # LSTM hyperparameters:
     __NUM_CLASSES = 1            # how many output features are desired
-    __LEARNING_RATE = 0.0001     # learning rate for optimizer (Adam)
+    __LEARNING_RATE = 0.00001    # learning rate for optimizer (Adam)
     __BATCH_SIZE = 32            # how many input sequences to process per training batch
     __EPOCHS = 100               # how many epochs to train (with entire dataset, in batches)
     __DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # How far to predict into the future (in entries), used by TorchLSTM_v1.predict():
-    __N_FUTURE = 200
+    __N_FUTURE = TorchLSTM_v2_N_FUTURE      # by default, predict as many as _LOOKBACK
 
-    def __init__(self, time_series: TimeSeries, read_from_stub=None, write_to_stub=None):
+    def __init__(self, time_series: TimeSeries, read_from_stub=None, write_to_stub=None,
+                 n_future=__N_FUTURE):
         # Storing this TimeSeries and its data information:
         self.time_series = time_series
         self.features = None        # this LSTM only uses the Target sequence, no other features
@@ -95,7 +101,7 @@ class TorchLSTM_v2:
         self.read_from_stub = read_from_stub
         self.write_to_stub = write_to_stub
         # Initializing the regressor and other model information:
-        self.regressor = BaseLSTM(self.__NUM_CLASSES).to(self.__DEVICE)
+        self.regressor = BaseLSTM_v2(self.__NUM_CLASSES).to(self.__DEVICE)
         if (read_from_stub is not None) and os.path.exists(read_from_stub):
             print(f"Loading existing model from {read_from_stub}...")
             self.regressor.load_state_dict(torch.load(read_from_stub))
@@ -104,6 +110,7 @@ class TorchLSTM_v2:
         self.optimizer = torch.optim.Adam(self.regressor.parameters(), lr=self.__LEARNING_RATE)
         # How far to look back each prediction (stored as BaseLSTM.input_size):
         self.__lookback = self.regressor.input_size
+        self.__n_future = n_future
 
         # Creating the Scaler used (for numerical stability with activation functions):
         self.scaler = StandardScaler()
@@ -209,7 +216,6 @@ class TorchLSTM_v2:
 
         return
 
-
     def predict(self, custom_df=None, value_name=None, datetime_name=None):
         """
         Running predictions on a dataset. Uses the validation data split (df_split_valid) by default.
@@ -237,7 +243,7 @@ class TorchLSTM_v2:
         predictions_so_far = np.array([])
         softwarn_bool = False       # used if predictions become unstable (go past known range)
         # Getting predictions, detaching to numpy (to allow pass through inverse_transform()):
-        for N in range(0, self.__N_FUTURE):
+        for N in range(0, self.__n_future):
             # Creating an array for our current data, based on known and predicted values:
             if N <= custom_df.shape[0]:
                 known_array = np.array(list(custom_df[value_name].iloc[N:]))
@@ -259,7 +265,5 @@ class TorchLSTM_v2:
             # Adding this prediction value to the DataFrame of predictions thus far:
             predictions_so_far = np.append(predictions_so_far, this_prediction[0][0])
 
-        # predictions = self.regressor.forward(dataset).detach().numpy()
-        # print(predictions)
         predictions = np.array([[x] for x in predictions_so_far])
         return predictions

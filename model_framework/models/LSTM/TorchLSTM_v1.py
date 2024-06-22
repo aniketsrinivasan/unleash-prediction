@@ -7,7 +7,7 @@ import os
 from utils import TimeSeries
 
 
-class BaseLSTM(nn.Module):
+class BaseLSTM_v1(nn.Module):
     # Hyperparameters for the LSTM:
     __INPUT_SIZE = 50
     __HIDDEN_SIZE = 512
@@ -30,7 +30,7 @@ class BaseLSTM(nn.Module):
 
         :param num_classes:     number of outputs desired (per sequence input).
         """
-        super(BaseLSTM, self).__init__()
+        super(BaseLSTM_v1, self).__init__()
         # Setting instance information:
         self.num_classes = num_classes
         self.input_size = self.__INPUT_SIZE     # accessed by TorchLSTM_v1 later
@@ -94,7 +94,7 @@ class TorchLSTM_v1:
         self.read_from_stub = read_from_stub
         self.write_to_stub = write_to_stub
         # Initializing the regressor and other model information:
-        self.regressor = BaseLSTM(self.__NUM_CLASSES).to(self.__DEVICE)
+        self.regressor = BaseLSTM_v1(self.__NUM_CLASSES).to(self.__DEVICE)
         if (read_from_stub is not None) and os.path.exists(read_from_stub):
             print(f"Loading existing model from {read_from_stub}...")
             self.regressor.load_state_dict(torch.load(read_from_stub))

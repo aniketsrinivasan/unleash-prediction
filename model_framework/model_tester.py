@@ -25,7 +25,8 @@ import matplotlib.pyplot as plt
 
 
 class ModelTester:
-    def __init__(self, kwargs_timeseries_init, models_init):
+    def __init__(self, kwargs_timeseries_init, models_init, verbose=False):
+        self.verbose = verbose
         self.time_series = TimeSeries(**kwargs_timeseries_init)
         self.time_series.prepare_from_scratch()
 
@@ -34,18 +35,20 @@ class ModelTester:
 
         # Initializing an empty dictionary to save trained model_framework and results:
         self.model_dict = None
+        # Initializing a DataFrame that contains each Model's validation prediction:
+        self.combined_validation_df = None
 
     def create_model_dict(self, train=False, validate=False,
-                          loss_function="mean_squared_error", verbose=True):
+                          loss_function="mean_squared_error"):
         # Fully initializing model_dict with the following structure:
         #   {model_name: MasterModel}
-        if verbose:
+        if self.verbose:
             print(f"Initializing model dictionary for ModelTester...")
         model_dict = dict()
 
         # Iterating over the keys in self.models_init (which are Model names):
         for model in self.models_init:
-            if verbose:
+            if self.verbose:
                 print(f"Creating model {model}:")
             # Initializing this model (using MasterModel):
             this_model = MasterModel(time_series=self.time_series, model_name=model,
@@ -53,13 +56,13 @@ class ModelTester:
             this_model.model_create()
             # If train is True, then we train the model:
             if train:
-                if verbose:
+                if self.verbose:
                     print(f"Training model {model}...")
                 # This training only occurs if Model.is_trained is False:
                 this_model.model_train()
             # If validate is True, then we run validation with verbose=False:
             if validate:
-                if verbose:
+                if self.verbose:
                     print(f"Validating model {model}...")
                 this_model.model_run_validation(loss_function=loss_function)
             model_dict[model] = this_model
@@ -68,27 +71,26 @@ class ModelTester:
         self.model_dict = model_dict
         return
 
-    def run_training(self, override=False, verbose=True):
+    def run_training(self, override=False):
         """
         Runs training on all model_framework stored in self.model_dict.
             If override=True, then any existing trained model is re-trained.
 
         :param override:        overrides any existing training information.
-        :param verbose:         prints debugging information.
         :return:                None.
         """
-        if verbose:
+        if self.verbose:
             print(f"Running training on all model_framework with override={override}:")
         for master_model in list(self.model_dict.values()):
             if override or (not master_model.is_trained):
-                if verbose:
+                if self.verbose:
                     print(f"Training model {master_model.model_name}...")
                 master_model.model_train()
-            elif verbose:
+            elif self.verbose:
                 print(f"Model {master_model.model_name} already trained. Skipping.")
         return
 
-    def run_validation(self, loss_function="mean_squared_error", override=False, verbose=False):
+    def run_validation(self, loss_function="mean_squared_error", override=False):
         """
         Gets validation information on all model_framework stored in self.model_dict.
             If override=True, any existing validation information is re-validated.
@@ -96,14 +98,14 @@ class ModelTester:
         :param: override:       overrides existing validation information.
         :return:                None.
         """
-        if verbose:
+        if self.verbose:
             print(f"Running validation on all model_framework with override={override}:")
         for master_model in list(self.model_dict.values()):
             if override or (master_model.model_validation_loss is None):
-                if verbose:
+                if self.verbose:
                     print(f"Validating model {master_model.model_name}...")
                 master_model.model_run_validation(loss_function)
-            elif verbose:
+            elif self.verbose:
                 print(f"Model {master_model.model_name} already validated. Skipping.")
         return
 
@@ -114,8 +116,8 @@ class ModelTester:
         :return:        dict() of validation losses (model_name: validation_loss).
         """
         losses = dict()
-        for master_model in list(self.model_dict.values()):
-            losses[master_model.model_name] = master_model.model_validation_loss
+        for model in list(self.model_dict.values()):
+            losses[model.model_name] = model.model_validation_loss
         print(losses)
         return losses
 
@@ -128,9 +130,29 @@ class ModelTester:
         for model in list(self.model_dict.values()):
             combined_df[model.model_name] = model.model_validation_df[f"Prediction_{model.model_name}"]
 
+        self.combined_validation_df = combined_df
         # Plotting:
         combined_df.plot()
+        plt.ylim(bottom=0)
         plt.show()
+        # Setting the mean value (for later):
+        self.combined_validation_df["Mean_Prediction"] = self.combined_validation_df.mean(axis=1)
+        return
 
+    # Plotting the average prediction of all predictions on the validation set:
+    def plot_validation_mean(self):
+        if self.combined_validation_df is None:
+            combined_df = self.time_series.df_split_valid[[self.time_series.datetime_name,
+                                                           self.time_series.value_name]].copy()
+            combined_df.set_index(self.time_series.datetime_name, inplace=True)
+            for model in list(self.model_dict.values()):
+                combined_df[model.model_name] = model.model_validation_df[f"Prediction_{model.model_name}"]
+
+            combined_df["Mean_Prediction"] = combined_df.mean(axis=1)
+            self.combined_validation_df = combined_df
+
+        self.combined_validation_df[["Mean_Prediction", self.time_series.value_name]].plot()
+        plt.ylim(bottom=0)
+        plt.show()
         return
 

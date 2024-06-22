@@ -94,6 +94,10 @@ class MasterModel:
 
         :return:    tuple[float (loss), pd.DataFrame (validation DataFrame)]
         """
+        if not self.is_trained:
+            print(f"SoftWarn: Model ({self.model_name}) has not been trained. "
+                  f"Running validation regardless, but consider using MasterModel.model_train first, "
+                  f"or loading a pre-trained Model.")
         self.model_validation_loss, self.model_validation_df = validation_loss(model=self.model,
                                                                                loss_function=loss_function,
                                                                                verbose=self.verbose)
