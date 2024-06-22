@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from .xgboost import *
-from .model_utils import validation_loss
+from .model_utils_deprecated import validation_loss
 from utils import TimeSeries
 from .LSTM import TorchLSTM_v1
 

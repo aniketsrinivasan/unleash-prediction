@@ -5,7 +5,7 @@ import requests
 
 # ~~~~~~~~~~~~~~~~~ HYPERPARAMETERS AND OTHER INFO ~~~~~~~~~~~~~~~~~
 #                           FOR THE USER
-
+__PATH = "/Users/aniket/PycharmProjects/unleashPredictions"
 # =========================  PARAMETERS  ===========================
 # Initialization parameters for TimeSeries future preparation:
 __kwargs_timeseries_future = dict(
@@ -27,7 +27,7 @@ __kwargs_features = dict(
 )
 # Arguments to modify the lag values created as features:
 __lag_base = 24*7
-__lag_multiples = [1, 4, 12]
+__lag_multiples = [2, 4, 12]
 __lag_label = "m"
 __kwargs_lags = dict(
     lag_base=__lag_base,
@@ -42,11 +42,11 @@ __kwargs_last_n = dict(
 )
 
 __kwargs_timeseries_init = dict(
-    csv_path="/Users/aniket/PycharmProjects/unleashPredictions/energy_data_short.csv",
+    csv_path=f"{__PATH}/energy_data_short_4k_10k.csv",
     datetime_name="Datetime",
     datetime_format="%Y-%m-%d %H:%M:%S",
     value_name="PJMW_MW",
-    split_ratio=[0.8, 0.15, 0.05],
+    split_ratio=[0.8, 0.175, 0.025],
     kwargs_features=__kwargs_features,
     kwargs_lags=__kwargs_lags,
     kwargs_last_n=__kwargs_last_n,
@@ -73,13 +73,14 @@ def main():
     # rewrite significant code from scratch to restructure (add inheritance?)
     # implement saving and loading models properly
     # find ways to combine XGBoost and LSTM to come up with predictions.
+    # implement dynamic usage of create_last_n based on how many entries are needed
 
     time_series = TimeSeries(**__kwargs_timeseries_init)
     time_series.prepare_from_scratch()
     print(time_series)
     print(time_series.value_name)
 
-    model = MasterModel(time_series, "TorchLSTM_v1",
+    model = MasterModel(time_series, "TorchLSTM_v2",
                         read_from_stub="/Users/aniket/PycharmProjects/unleashPredictions/model_framework/models/LSTM/saved_models/lstm_5",
                         write_to_stub=None,
                         is_trained=True)
