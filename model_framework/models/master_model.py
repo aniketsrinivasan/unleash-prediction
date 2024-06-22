@@ -1,7 +1,7 @@
-from .xgboost import *
+from .xgboost import (XGBoostTTV_v1, XGBoostCV_v1)
 from .model_utils import validation_loss
 from utils import TimeSeries
-from .LSTM import TorchLSTM_v1
+from .LSTM import (TorchLSTM_v1, TorchLSTM_v2)
 
 
 class MasterModel:
@@ -48,6 +48,10 @@ class MasterModel:
                                        write_to_stub=self.write_to_stub)
         elif self.model_name == "TorchLSTM_v1":
             self.model = TorchLSTM_v1(time_series=self.time_series,
+                                      read_from_stub=self.read_from_stub,
+                                      write_to_stub=self.write_to_stub)
+        elif self.model_name == "TorchLSTM_v2":
+            self.model = TorchLSTM_v2(time_series=self.time_series,
                                       read_from_stub=self.read_from_stub,
                                       write_to_stub=self.write_to_stub)
         else:
@@ -98,14 +102,14 @@ class MasterModel:
     def get_dict(self):
         """
                 Creates a dictionary containing information about the MasterModel:
-                    {"model": Model, "hyperparameters": ..., "validation_loss": ..., "validation_df": ...,}
+                    {"model": model_name, "hyperparameters": ..., "validation_loss": ..., "validation_df": ...,}
 
                 :return:        dict() of MasterModel information.
                 """
         if self.verbose:
             print(f"Creating MasterModel dictionary...")
         model_dict = dict()
-        model_dict["model"] = self.model
+        model_dict["model_name"] = self.model_name
         model_dict["hyperparameters"] = self.model_kwargs
         model_dict["validation_loss"] = self.model_validation_loss
         model_dict["validation_df"] = self.model_validation_df

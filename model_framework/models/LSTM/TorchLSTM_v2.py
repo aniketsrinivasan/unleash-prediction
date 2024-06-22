@@ -4,7 +4,6 @@ from torch.autograd import Variable
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 import os
-import pandas as pd
 from utils import TimeSeries
 
 
@@ -74,7 +73,7 @@ class BaseLSTM(nn.Module):
         return output
 
 
-class TorchLSTM_v1:
+class TorchLSTM_v2:
     # LSTM hyperparameters:
     __NUM_CLASSES = 1            # how many output features are desired
     __LEARNING_RATE = 0.0001     # learning rate for optimizer (Adam)
@@ -92,7 +91,7 @@ class TorchLSTM_v1:
         self.target = time_series.value_name
         self.verbose = time_series.verbose
 
-        self.model_name = "TorchLSTM_v1"
+        self.model_name = "TorchLSTM_v2"
         self.read_from_stub = read_from_stub
         self.write_to_stub = write_to_stub
         # Initializing the regressor and other model information:
@@ -178,7 +177,7 @@ class TorchLSTM_v1:
         :return:    None.
         """
         value_name = self.time_series.value_name
-
+        this_loss = 0
         # Iterating over epochs:
         for epoch in range(self.__EPOCHS):
             # Iterating over batches:
@@ -239,7 +238,7 @@ class TorchLSTM_v1:
         softwarn_bool = False       # used if predictions become unstable (go past known range)
         # Getting predictions, detaching to numpy (to allow pass through inverse_transform()):
         for N in range(0, self.__N_FUTURE):
-            # Creating an for our current data, based on known and predicted values:
+            # Creating an array for our current data, based on known and predicted values:
             if N <= custom_df.shape[0]:
                 known_array = np.array(list(custom_df[value_name].iloc[N:]))
                 predicted_array = predictions_so_far[:N]

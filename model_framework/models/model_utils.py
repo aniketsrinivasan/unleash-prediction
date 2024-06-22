@@ -27,7 +27,7 @@ def validation_loss(model, loss_function="mean_squared_error", verbose=True):
 
     #   If the Model is an LSTM model, then the .predict() method takes in the
     #   last "n" known sequential Target values, and predicts a set of future values.
-    elif model.model_name in ("TorchLSTM_v1", ):
+    elif model.model_name in ("TorchLSTM_v1", "TorchLSTM_v2"):
         # Note: the last "n" known sequential Target values before TimeSeries.df_split_valid
         #       is end of TimeSeries.df_split_test.
         #       If no test split exists (so df_split_test is None), then use the
