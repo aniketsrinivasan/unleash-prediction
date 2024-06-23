@@ -31,6 +31,7 @@ def main():
     tester.get_validation_losses()
     tester.plot_validation_losses()
     tester.plot_validation_mean()
+    tester.plot_validation_scheduler(isolate_model="TorchLSTM_v2")
 
 
 if __name__ == "__main__":

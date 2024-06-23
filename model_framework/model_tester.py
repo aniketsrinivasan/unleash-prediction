@@ -1,4 +1,4 @@
-from .models import MasterModel
+from .models import (MasterModel, TorchLSTM_v2_LOOKBACK)
 from utils import TimeSeries
 import matplotlib.pyplot as plt
 # Idea: test and compare various model_framework easily.
@@ -22,6 +22,34 @@ import matplotlib.pyplot as plt
 #   find a way to save hyperparameters automatically when running model_framework.
 #       perhaps save in a dictionary file somewhere (load "write", modify, close) each time
 #       maybe worth creating a class for saved results (in a struct-style) and saving this instead?
+
+
+def create_scheduler(lookback: int, start_end_values: tuple, smooth_window_ratio: float):
+    """
+    Creates two lists of floats, both adding to 1. The first list follows the above pattern,
+    such that the values in the list begin at start_end[0], and end at start_end[1].
+    The second list is (1-first_list).
+
+    Both lists are of length lookback.
+
+    :param lookback:            the length of the produced list.
+    :param start_end_values:    a tuple of (start_value, end_value) for calculating averages.
+    :param smooth_window_ratio: the ratio (of lookback) for the smoothing window.
+    :return:                    a tuple of float lists (scheduler_list, complement_list).
+    """
+    # Initializing scheduler_list:
+    scheduler_list = [0 for _ in range(lookback)]
+    smooth_start_idx = int(lookback - (smooth_window_ratio * lookback))
+    smooth_slope = (start_end_values[1] - start_end_values[0]) / (lookback - smooth_start_idx)
+    for i in range(lookback):
+        if i < smooth_start_idx:
+            scheduler_list[i] = start_end_values[0]
+        else:
+            scheduler_list[i] = start_end_values[0] + smooth_slope * (i - smooth_start_idx)
+
+    complement_list = [(1 - x) for x in scheduler_list]
+    return scheduler_list, complement_list
+
 
 
 class ModelTester:
@@ -156,3 +184,25 @@ class ModelTester:
         plt.show()
         return
 
+    def plot_validation_scheduler(self, isolate_model: str):
+        start_value = 0.4
+        end_value = 0.0
+        smooth_window_ratio = 0.7
+
+        meaningful_future_window = min(TorchLSTM_v2_LOOKBACK, self.combined_validation_df.shape[0])
+        scheduler_list, complement_list = create_scheduler(meaningful_future_window, (start_value, end_value), smooth_window_ratio)
+        print(scheduler_list)
+        complement_df = self.combined_validation_df.copy().drop(columns=[f"{isolate_model}"])
+        complement_df["Complement_Mean_Prediction"] = complement_df.mean(axis=1)
+        scheduler_df = self.combined_validation_df[f"{isolate_model}"].copy()
+
+        averages = list(complement_df["Complement_Mean_Prediction"])
+        for i in range(meaningful_future_window):
+            this_average = scheduler_list[i] * scheduler_df.iloc[i] + complement_list[i] * complement_df["Complement_Mean_Prediction"].iloc[i]
+            averages[i] = this_average
+
+        self.combined_validation_df["Scheduler_Mean_Prediction"] = averages
+        self.combined_validation_df[["Scheduler_Mean_Prediction", self.time_series.value_name]].plot()
+        plt.ylim(bottom=0)
+        plt.show()
+        return

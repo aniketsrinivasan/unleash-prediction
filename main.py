@@ -42,11 +42,11 @@ __kwargs_last_n = dict(
 )
 
 __kwargs_timeseries_init = dict(
-    csv_path=f"{__PATH}/energy_data_short_10k_16k.csv",
+    csv_path=f"{__PATH}/energy_data.csv",
     datetime_name="Datetime",
     datetime_format="%Y-%m-%d %H:%M:%S",
     value_name="PJMW_MW",
-    split_ratio=[0.7, 0.23, 0.07],
+    split_ratio=[0.7, 0.299, 0.001],
     kwargs_features=__kwargs_features,
     kwargs_lags=__kwargs_lags,
     kwargs_last_n=__kwargs_last_n,

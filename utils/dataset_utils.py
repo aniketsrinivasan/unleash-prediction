@@ -242,8 +242,8 @@ def data_split_train_test_valid(dataframe: pd.DataFrame, ratio: list[float], ver
     """
     if verbose:
         print(f"Splitting dataset into training, testing and validation with ratio {ratio}.")
-    if int(math.fsum(ratio)) != 1:
-        raise ValueError(f"Ratios must sum to 1. Current sum: {int(math.fsum(ratio))}.")
+    if not 0.999 <= math.fsum(ratio) <= 1.001:
+        raise ValueError(f"Ratios must sum to 1. Current sum: {math.fsum(ratio)} => {int(math.fsum(ratio))}.")
 
     # Calculating sizes:
     dataset_len = dataframe.shape[0]
