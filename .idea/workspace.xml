@@ -4,12 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated commit.">
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Initial testing with scheduler for averaging.">
+      <change afterPath="$PROJECT_DIR$/model_framework/models/hybrid/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_framework/models/hybrid/frequency_feedback.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_framework/models/hybrid/hybrid_averaging.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/model_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/dataset_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,15 +96,10 @@
       <workItem from="1718996358237" duration="16094000" />
       <workItem from="1719052448428" duration="5162000" />
       <workItem from="1719061535416" duration="10254000" />
-      <workItem from="1719138309018" duration="5987000" />
-    </task>
-    <task id="LOCAL-00009" summary="Updated commit.">
-      <option name="closed" value="true" />
-      <created>1718308248849</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1718308248849</updated>
+      <workItem from="1719138309018" duration="6231000" />
+      <workItem from="1719147969485" duration="2153000" />
+      <workItem from="1719244739113" duration="9201000" />
+      <workItem from="1719342643388" duration="428000" />
     </task>
     <task id="LOCAL-00010" summary="Removed old models.">
       <option name="closed" value="true" />
@@ -487,7 +485,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719081655728</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Initial testing with scheduler for averaging.">
+      <option name="closed" value="true" />
+      <created>1719145475281</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1719145475281</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -505,7 +511,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated MasterModel framework to control Model(s)." />
     <MESSAGE value="Modified structure.&#10;Added additional automated testing features." />
     <MESSAGE value="Implemented one-hot encoded holidays." />
     <MESSAGE value="Initial implementation of TorchLSTM_v1 model." />
@@ -530,6 +535,17 @@
     <MESSAGE value="Updated testing framework." />
     <MESSAGE value="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets)." />
     <MESSAGE value="Updated commit." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated commit." />
+    <MESSAGE value="Initial testing with scheduler for averaging." />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial testing with scheduler for averaging." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

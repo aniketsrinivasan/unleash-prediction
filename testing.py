@@ -5,15 +5,15 @@ ROOT_DIR = "/Users/aniket/PycharmProjects/unleashPredictions/"
 
 __models_init_dict = {
     "XGBoostTTV_v1": dict(
-        read_from_stub=None,
-        write_to_stub=None,
-        is_trained=False,
+        read_from_stub=f"{ROOT_DIR}model_framework/models/xgboost/saved_models/xgboost_ttv_1",
+        write_to_stub=f"{ROOT_DIR}model_framework/models/xgboost/saved_models/xgboost_ttv_1",
+        is_trained=True,
     ),
-    "XGBoostCV_v1": dict(
-        read_from_stub=None,
-        write_to_stub=None,
-        is_trained=False,
-    ),
+    # "XGBoostCV_v1": dict(
+    #     read_from_stub=None,
+    #     write_to_stub=None,
+    #     is_trained=False,
+    # ),
     "TorchLSTM_v2": dict(
         read_from_stub=f"{ROOT_DIR}model_framework/models/LSTM/saved_models/lstm_energy_data_500",
         write_to_stub=None,
@@ -28,9 +28,9 @@ def main():
     tester.create_model_dict()
     tester.run_training()
     tester.run_validation()
-    tester.get_validation_losses()
-    tester.plot_validation_losses()
-    tester.plot_validation_mean()
+    # tester.get_validation_losses()
+    # tester.plot_validation_losses()
+    # tester.plot_validation_mean()
     tester.plot_validation_scheduler(isolate_model="TorchLSTM_v2")
 
 

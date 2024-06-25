@@ -1,4 +1,5 @@
 import numpy as np
+import os
 import xgboost as xgb
 from sklearn.metrics import mean_squared_error
 from utils import TimeSeries
@@ -36,8 +37,9 @@ class XGBoostTTV_v1:
 
         # Initializing a saved model with scores and cross-validation predictions:
         self.regressor = None
-        self.scores = None
-        self.predictions = None
+        if (read_from_stub is not None) and os.path.exists(read_from_stub):
+            self.regressor = xgb.XGBRegressor(**self.__kwargs_hyperparams)
+            self.regressor.load_model(read_from_stub)
 
     def train(self):
         """
@@ -80,9 +82,10 @@ class XGBoostTTV_v1:
 
         # Saving this regressor as an instance attribute:
         self.regressor = regressor
-        # Saving the scores and predictions:
-        self.scores = scores
-        self.predictions = predictions
+        # Saving this regressor into a file:
+        if (self.write_to_stub is not None) and os.path.exists(self.write_to_stub):
+            self.regressor.save_model(self.write_to_stub)
+            print(f"Saving trained model to {self.write_to_stub}.")
         return
 
     def predict(self, custom_df=None, datetime_name=None, value_name=None):
@@ -95,8 +98,9 @@ class XGBoostTTV_v1:
         :param: value_name:     name of the Target column, if custom_df is provided.
         :return:                predictions of the model (as an array).
         """
-        if self.regressor is None:
+        if (self.regressor is None) and (self.read_from_stub is None):
             raise Exception(f"Regressor has not been trained yet.")
+
         # If a custom dataframe is not provided, set future_dataset to TimeSeries.df_future_only:
         if custom_df is None:
             if self.time_series.df_future_only.shape[0] > self.time_series.lag_min:

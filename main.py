@@ -42,11 +42,11 @@ __kwargs_last_n = dict(
 )
 
 __kwargs_timeseries_init = dict(
-    csv_path=f"{__PATH}/energy_data.csv",
+    csv_path=f"{__PATH}/energy_data_short_4k_10k.csv",
     datetime_name="Datetime",
     datetime_format="%Y-%m-%d %H:%M:%S",
     value_name="PJMW_MW",
-    split_ratio=[0.7, 0.299, 0.001],
+    split_ratio=[0.7, 0.23, 0.07],
     kwargs_features=__kwargs_features,
     kwargs_lags=__kwargs_lags,
     kwargs_last_n=__kwargs_last_n,
@@ -59,21 +59,18 @@ __kwargs_timeseries_init = dict(
 
 def main():
     # To-do:
-    #   * add method to vary split_ratio based on future_window_size (so that valid is same size)
     #   * add XGBoostCV_v2 (another method of cross-validation) using sk-learn (?)
     #   * experiment with the following model_framework (hopefully on other datasets, too):
     #       - other XGBoost variants and hyperparameters
-    #       - transformer? (this doesn't look promising though)
     #       - fourier analytic methods (i.e. wavelet transform?)
     #           the idea is to try encoding the frequencies into the training data directly
     #           most likely would require modifying feature creation (to include fourier)
     # idea: use wavelet transformations to initially train LSTM, and then fine-tune on dataset
     #           (almost ensures convergence to a meaningful pattern)
-    # implement dataset methods to use torch.DataLoader for large datasets (for LSTM effiency)
-    # rewrite significant code from scratch to restructure (add inheritance?)
     # implement saving and loading models properly
     # find ways to combine XGBoost and LSTM to come up with predictions.
-    # implement dynamic usage of create_last_n based on how many entries are needed
+    # implement multi-step predictions for XGBoost (so that lag sizes can be independent
+    #   of the prediction window).
 
     # when taking average of all three models' predictions, try some "scheduling"-type average where:
     #   LSTM's importance takes precedence in the initial portion of predictions

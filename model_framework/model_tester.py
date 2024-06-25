@@ -51,7 +51,6 @@ def create_scheduler(lookback: int, start_end_values: tuple, smooth_window_ratio
     return scheduler_list, complement_list
 
 
-
 class ModelTester:
     def __init__(self, kwargs_timeseries_init, models_init, verbose=False):
         self.verbose = verbose
@@ -185,13 +184,23 @@ class ModelTester:
         return
 
     def plot_validation_scheduler(self, isolate_model: str):
-        start_value = 0.4
+        start_value = 0.6
         end_value = 0.0
-        smooth_window_ratio = 0.7
+        smooth_window_ratio = 0.5
+
+        if self.combined_validation_df is None:
+            combined_df = self.time_series.df_split_valid[[self.time_series.datetime_name,
+                                                           self.time_series.value_name]].copy()
+            combined_df.set_index(self.time_series.datetime_name, inplace=True)
+            for model in list(self.model_dict.values()):
+                combined_df[model.model_name] = model.model_validation_df[f"Prediction_{model.model_name}"]
+
+            combined_df["Mean_Prediction"] = combined_df.mean(axis=1)
+            self.combined_validation_df = combined_df
 
         meaningful_future_window = min(TorchLSTM_v2_LOOKBACK, self.combined_validation_df.shape[0])
         scheduler_list, complement_list = create_scheduler(meaningful_future_window, (start_value, end_value), smooth_window_ratio)
-        print(scheduler_list)
+        # print(scheduler_list)
         complement_df = self.combined_validation_df.copy().drop(columns=[f"{isolate_model}"])
         complement_df["Complement_Mean_Prediction"] = complement_df.mean(axis=1)
         scheduler_df = self.combined_validation_df[f"{isolate_model}"].copy()
