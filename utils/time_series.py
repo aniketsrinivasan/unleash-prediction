@@ -43,6 +43,13 @@ class TimeSeries:
         #   (Minimum) lag value used (stored for when predictions are made):
         self.lag_min = None
         self.lag_max = None
+        # Immediately try to get the max_lag and min_lag for faster prepare_for_forecast function:
+        try:
+            self.lag_max = kwargs_lags["lag_base"] * max(kwargs_lags["lag_multiples"])
+            self.lag_min = kwargs_lags["lag_base"] * min(kwargs_lags["lag_multiples"])
+        except KeyError as e:
+            print(f"SoftWarn: Unable to immediately find min/max lags. May slow forecasting. \n"
+                  f"Error: {e}.")
 
         # Initializing the train/test/valid split dataframes:
         self.df_split_train = None
@@ -299,6 +306,11 @@ class TimeSeries:
             kwargs_lags = self.kwargs_lags
         if kwargs_prepare_future is None:
             kwargs_prepare_future = self.kwargs_prepare_future
+
+        # Only consider as many entries as necessary:
+        if self.lag_max is not None:
+            n_entries = max(self.lag_max, 500)  # NOTE: 500 needs to be __lookback.
+            self.df_raw = self.df_raw.iloc[-n_entries:]
 
         # Augment and store the raw data:
         self.df_augment(override=True, kwargs_features=kwargs_features, kwargs_lags=kwargs_lags)
