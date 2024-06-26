@@ -290,3 +290,19 @@ class TimeSeries:
         # Create last_n entries:
         self.df_create_last_n(kwargs_last_n=kwargs_last_n)
         return
+
+    def prepare_for_forecast(self, kwargs_last_n=None, split_ratio=None, kwargs_features=None,
+                             kwargs_lags=None, kwargs_prepare_future=None):
+        if kwargs_features is None:
+            kwargs_features = self.kwargs_features
+        if kwargs_lags is None:
+            kwargs_lags = self.kwargs_lags
+        if kwargs_prepare_future is None:
+            kwargs_prepare_future = self.kwargs_prepare_future
+
+        # Augment and store the raw data:
+        self.df_augment(override=True, kwargs_features=kwargs_features, kwargs_lags=kwargs_lags)
+        # Create and store future (both "only" and "concat") datasets:
+        self.df_create_future(**kwargs_prepare_future,
+                              kwargs_features=kwargs_features, kwargs_lags=kwargs_lags)
+        return
