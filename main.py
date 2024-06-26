@@ -9,15 +9,17 @@ __PATH = "/Users/aniket/PycharmProjects/unleashPredictions"
 # =========================  PARAMETERS  ===========================
 # Initialization parameters for TimeSeries future preparation:
 __kwargs_timeseries_future = dict(
-    window_size=24*7*4,
+    window_size=24*7,
     step_size="1h",
 )
 
 # =======================  HYPERPARAMETERS  ========================
 # Arguments to modify the creation of time-series features:
 __kwargs_features = dict(
+    minutes=False,
     hours=True,
     days_of_week=True,
+    days_of_week_onehot=True,
     weeks=True,
     days_of_month=True,
     months=True,
@@ -42,11 +44,11 @@ __kwargs_last_n = dict(
 )
 
 __kwargs_timeseries_init = dict(
-    csv_path=f"{__PATH}/energy_data_short_4k_10k.csv",
+    csv_path=f"{__PATH}/energy_data.csv",
     datetime_name="Datetime",
     datetime_format="%Y-%m-%d %H:%M:%S",
     value_name="PJMW_MW",
-    split_ratio=[0.7, 0.23, 0.07],
+    split_ratio=[0.7, 0.299, 0.001],
     kwargs_features=__kwargs_features,
     kwargs_lags=__kwargs_lags,
     kwargs_last_n=__kwargs_last_n,

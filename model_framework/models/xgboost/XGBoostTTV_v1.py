@@ -10,11 +10,11 @@ class XGBoostTTV_v1:
     __kwargs_hyperparams = dict(
         base_score=0.50,                # base "average" to build regression trees from
         booster='gbtree',               # the gradient booster used
-        n_estimators=1500,              # number of estimators (trees)
+        n_estimators=1200,              # number of estimators (trees)
         early_stopping_rounds=800,      # early stopping rounds if loss plateaus
         objective="reg:squarederror",   # loss function to use
-        max_depth=3,                    # maximum (tree) depth
-        learning_rate=0.01              # learning rate for regressor
+        max_depth=4,                    # maximum (tree) depth
+        learning_rate=0.005             # learning rate for regressor
     )
 
     def __init__(self, time_series: TimeSeries, read_from_stub=None, write_to_stub=None):
@@ -48,7 +48,10 @@ class XGBoostTTV_v1:
         :return:        None.
         """
         # Creating a regressor that takes in ALL the available data:
-        regressor = xgb.XGBRegressor(**self.__kwargs_hyperparams)
+        if self.regressor is None:
+            regressor = xgb.XGBRegressor(**self.__kwargs_hyperparams)
+        else:
+            regressor = self.regressor
 
         # Initializing predictions and scores:
         predictions = []

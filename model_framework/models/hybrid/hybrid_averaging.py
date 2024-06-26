@@ -82,7 +82,7 @@ class HybridAveraging_v1:
         model_dict = {}
         for model in self.models_init:
             this_model = MasterModel(time_series=time_series, model_name=model,
-                                            **models_init[model])
+                                     **models_init[model])
             this_model.model_create()
             model_dict[model] = this_model
         self.model_dict = model_dict
@@ -120,8 +120,8 @@ class HybridAveraging_v1:
                 print(f"! Critical Warning: Model {master_model.model_name} is not trained. "
                       f"Running predictions regardless. !")
             # Adding this prediction to the combined_prediction_df:
-            prediction = master_model.model_predict()
-            self.combined_prediction_df[f"Prediction_{master_model.model_name}"] = master_model.model_predict()
+            self.combined_prediction_df[f"Prediction_{master_model.model_name}"] = (
+                master_model.model_predict())
 
         if averaging == "average_mean":
             self.combined_prediction_df[averaging] = self.combined_prediction_df.mean(axis=1)
