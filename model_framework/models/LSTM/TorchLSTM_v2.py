@@ -123,11 +123,15 @@ class TorchLSTM_v2:
         For custom datasets, the dataset's Target column name must be passed into value_name.
         Custom datasets are assumed to be sorted in time-series order.
 
+        Data preparation can also be performed on np.array objects directly, instead of pd.DataFrames.
+        In this instance, set is_array=True.
+
         This function converts the dataset to sequential Variables to pass into the LSTM model.
         It returns two Variables:   (sequences, labels),    where sequences[i] has label labels[i].
 
         :param dataset:         passing a custom dataset.
         :param value_name:      name of the Target column (required if dataset is used).
+        :param is_array:        whether dataset is an np.ndarray object.
         :return:                tuple[torch.Variable, torch.Variable]
         """
         # Initializing empty lists for inputs and labels:
@@ -177,16 +181,22 @@ class TorchLSTM_v2:
         return X_train, y_train
 
     # Training method defaults to using the TimeSeries training split.
-    def train(self):
+    def train(self, epochs=None):
         """
         Train the LSTM model in BaseLSTM. Uses the TimeSeries training data split.
 
-        :return:    None.
+        :param epochs:  number of epochs to train for (recommended ~10 for incremental training).
+        :return:        None.
         """
         value_name = self.time_series.value_name
         this_loss = 0
+
+        # Using custom_epochs if provided:
+        if epochs is None:
+            epochs = self.__EPOCHS
+
         # Iterating over epochs:
-        for epoch in range(self.__EPOCHS):
+        for epoch in range(epochs):
             # Iterating over batches:
             #   starts at 0, stops at (length-__lookback), steps by batch_size.
             #   stopping at (length-__lookback) is necessary to ensure at least __lookback inputs are provided.
@@ -229,21 +239,25 @@ class TorchLSTM_v2:
         :return:                predictions (as a numpy array) that have been re-scaled.
         """
         if custom_df is None:
-            if self.time_series.df_split_valid_last_n.shape[0] > self.__lookback:
+            if self.time_series.df_augmented.shape[0] > self.__lookback:
                 # Only consider as many entries as necessary:
-                custom_df = self.time_series.df_split_valid_last_n.iloc[:self.__lookback+1]
+                custom_df = self.time_series.df_augmented.iloc[:self.__lookback+1]
             else:
                 raise IndexError(f"Custom DataFrame not provided for prediction, but the "
-                                 f"last 'n' of TimeSeries.df_split_valid is not long enough. \n"
+                                 f"last 'n' of the current (entire) dataset is not long enough. \n"
                                  f"    lookback:   {self.__lookback} \n"
-                                 f"    last 'n':   {self.time_series.df_split_valid_last_n.shape[0]}.")
+                                 f"    last 'n':   {self.time_series.df_augmented.shape[0]}.")
             value_name = self.target
         dataset, _ = self.prepare_data(dataset=custom_df, value_name=value_name)
 
         predictions_so_far = np.array([])
         softwarn_bool = False       # used if predictions become unstable (go past known range)
+
         # Getting predictions, detaching to numpy (to allow pass through inverse_transform()):
-        for N in range(0, self.__n_future):
+        n_future = min(self.__n_future, self.time_series.df_future_only.shape[0])
+        buffer_len = abs(self.__n_future - self.time_series.df_future_only.shape[0])
+
+        for N in range(0, n_future):
             # Creating an array for our current data, based on known and predicted values:
             if N <= custom_df.shape[0]:
                 known_array = np.array(list(custom_df[value_name].iloc[N:]))
@@ -264,6 +278,9 @@ class TorchLSTM_v2:
 
             # Adding this prediction value to the DataFrame of predictions thus far:
             predictions_so_far = np.append(predictions_so_far, this_prediction[0][0])
+
+        # Adding buffer of zeros:
+        predictions_so_far = np.append(predictions_so_far, [0 for _ in range(buffer_len)])
 
         predictions = np.array([[x] for x in predictions_so_far])
         return predictions
