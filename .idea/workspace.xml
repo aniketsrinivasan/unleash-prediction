@@ -4,17 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Implementing hybrid-model prediction methods.">
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated commit.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/torch_dataset.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/hybrid/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/hybrid/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/models/hybrid/hybrid_averaging.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/hybrid/hybrid_averaging.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/models/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/master_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/dataset_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,47 +103,8 @@
       <workItem from="1719244739113" duration="9201000" />
       <workItem from="1719342643388" duration="428000" />
       <workItem from="1719346245001" duration="42000" />
-      <workItem from="1719396629509" duration="6440000" />
-    </task>
-    <task id="LOCAL-00012" summary="Updated commit.">
-      <option name="closed" value="true" />
-      <created>1718308601230</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1718308601230</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Modified model methods.">
-      <option name="closed" value="true" />
-      <created>1718388182945</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1718388182945</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Created testing framework.">
-      <option name="closed" value="true" />
-      <created>1718388262815</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1718388262815</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Updated commit.">
-      <option name="closed" value="true" />
-      <created>1718388303709</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1718388303709</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Added README file.">
-      <option name="closed" value="true" />
-      <created>1718633126101</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1718633126103</updated>
+      <workItem from="1719396629509" duration="6833000" />
+      <workItem from="1719409225189" duration="4944000" />
     </task>
     <task id="LOCAL-00017" summary="Updated ModelTester framework.">
       <option name="closed" value="true" />
@@ -497,7 +458,47 @@
       <option name="project" value="LOCAL" />
       <updated>1719346282265</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Modified to include incremental training.">
+      <option name="closed" value="true" />
+      <created>1719403375628</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1719403375629</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Implemented incremental training. Added buffer to future predictions to maintain consistent length.">
+      <option name="closed" value="true" />
+      <created>1719403411371</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1719403411371</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Added incremental training. Modified prediction documentation.">
+      <option name="closed" value="true" />
+      <created>1719403444179</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1719403444179</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Implemented HybridAveraging_v1 Model.">
+      <option name="closed" value="true" />
+      <created>1719403456941</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1719403456941</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1719403467657</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1719403467657</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -515,10 +516,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Implemented one-hot encoded holidays." />
-    <MESSAGE value="Initial implementation of TorchLSTM_v1 model." />
-    <MESSAGE value="Updated to include TorchLSTM_v1." />
-    <MESSAGE value="Implemented TorchLSTM_v1 (LSTM model)." />
     <MESSAGE value="Testing TorchLSTM_v1." />
     <MESSAGE value="Updated implementation." />
     <MESSAGE value="Updated README." />
@@ -538,9 +535,13 @@
     <MESSAGE value="Updated testing framework." />
     <MESSAGE value="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets)." />
     <MESSAGE value="Initial testing with scheduler for averaging." />
-    <MESSAGE value="Updated commit." />
     <MESSAGE value="Implementing hybrid-model prediction methods." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementing hybrid-model prediction methods." />
+    <MESSAGE value="Modified to include incremental training." />
+    <MESSAGE value="Implemented incremental training. Added buffer to future predictions to maintain consistent length." />
+    <MESSAGE value="Added incremental training. Modified prediction documentation." />
+    <MESSAGE value="Implemented HybridAveraging_v1 Model." />
+    <MESSAGE value="Updated commit." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated commit." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
