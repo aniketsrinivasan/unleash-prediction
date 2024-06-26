@@ -82,11 +82,15 @@ class MasterModel:
 
         :return:    None.
         """
+        if self.is_trained:
+            print(f"Model {self.model_name} has already been trained. Not continuing incremental training.")
+            return
         if (self.read_from_stub is None) or (self.write_to_stub is None):
-            raise ValueError(f"Both read_from_stub and write_to_stub must be provided and exist for"
-                             f"incremental training. \n"
-                             f"read_from_stub:  {self.read_from_stub}\n"
-                             f"write_to_stub:   {self.write_to_stub}")
+            print(f"SoftWarn: Both read_from_stub and write_to_stub must be provided and exist for "
+                  f"incremental training. Skipping training. \n"
+                  f"read_from_stub:  {self.read_from_stub}\n"
+                  f"write_to_stub:   {self.write_to_stub}")
+            return
         if self.verbose:
             print(f"Running incremental training on {self.model_name}.")
 
