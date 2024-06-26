@@ -75,13 +75,42 @@ class MasterModel:
         self.is_trained = True
         return self.model.train()
 
+    def model_incremental_train(self):
+        """
+        Runs incremental training on an existing Model (loaded from self.read_from_stub) on a low
+        epoch count. Saves the Model into self.write_to_stub.
+
+        :return:    None.
+        """
+        if (self.read_from_stub is None) or (self.write_to_stub is None):
+            raise ValueError(f"Both read_from_stub and write_to_stub must be provided and exist for"
+                             f"incremental training. \n"
+                             f"read_from_stub:  {self.read_from_stub}\n"
+                             f"write_to_stub:   {self.write_to_stub}")
+        if self.verbose:
+            print(f"Running incremental training on {self.model_name}.")
+
+        # Setting the training epochs to 10 (used by any model that trains on epochs):
+        custom_epochs = 10
+        return self.model.train(epochs=custom_epochs)
+
     def model_predict(self, custom_df=None, datetime_name=None, value_name=None):
+        """
+        The model_predict() method is used to run predictions with the provided Model.
+        If a custom DataFrame is not provided, the Model's default (future) DataFrame is used
+        (e.g. for XGBoost, this would be df_future_only).
+
+        :param custom_df:       running predictions on a custom DataFrame.
+        :param datetime_name:   name of the DateTime column (if custom_df is not None).
+        :param value_name:      name of the Target column (if custom_df is not None).
+        :return:
+        """
         if self.verbose:
             print(f"Running predictions using model {self.model_name}. "
                   f"Custom DataFrame: {True if custom_df is not None else False}.")
         if not self.is_trained:
             print(f"SoftWarn: Model ({self.model_name}) is not trained. "
-                  f"Use MasterModel.train() before making predictions.")
+                  f"Use MasterModel.model_train() before making predictions.")
         return self.model.predict(custom_df=custom_df, datetime_name=datetime_name, value_name=value_name)
 
     def model_run_validation(self, loss_function="mean_squared_error"):
