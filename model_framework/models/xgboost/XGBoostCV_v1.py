@@ -1,5 +1,6 @@
 import numpy as np
 import xgboost as xgb
+import os
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import mean_squared_error
 from utils import TimeSeries
@@ -45,8 +46,9 @@ class XGBoostCV_v1:
 
         # Initializing a saved model with scores and cross-validation predictions:
         self.regressor = None
-        self.scores = None
-        self.predictions = None
+        if (read_from_stub is not None) and os.path.exists(read_from_stub):
+            self.regressor = xgb.XGBRegressor(**self.__kwargs_hyperparams)
+            self.regressor.load_model(read_from_stub)
 
     def train(self, epochs=None):
         """
@@ -55,7 +57,10 @@ class XGBoostCV_v1:
         :return:        None.
         """
         # Creating the Regressor model:
-        regressor = xgb.XGBRegressor(**self.__kwargs_hyperparams)
+        if self.regressor is None:
+            regressor = xgb.XGBRegressor(**self.__kwargs_hyperparams)
+        else:
+            regressor = self.regressor
 
         # Initializing predictions and scores:
         predictions = []
@@ -96,9 +101,10 @@ class XGBoostCV_v1:
 
         # Saving this regressor as an instance attribute:
         self.regressor = regressor
-        # Saving the scores and predictions:
-        self.scores = scores
-        self.predictions = predictions
+        # Saving this regressor into a file:
+        if (self.write_to_stub is not None) and os.path.exists(self.write_to_stub):
+            self.regressor.save_model(self.write_to_stub)
+            print(f"Saving trained model to {self.write_to_stub}.")
         return
 
     def predict(self, custom_df=None, datetime_name=None, value_name=None):
