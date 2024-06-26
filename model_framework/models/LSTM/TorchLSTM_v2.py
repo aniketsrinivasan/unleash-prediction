@@ -255,7 +255,7 @@ class TorchLSTM_v2:
 
         # Getting predictions, detaching to numpy (to allow pass through inverse_transform()):
         n_future = min(self.__n_future, self.time_series.df_future_only.shape[0])
-        buffer_len = abs(self.__n_future - self.time_series.df_future_only.shape[0])
+        buffer_len = self.time_series.df_future_only.shape[0] - self.__n_future
 
         for N in range(0, n_future):
             # Creating an array for our current data, based on known and predicted values:
