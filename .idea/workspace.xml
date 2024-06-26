@@ -4,13 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Initial testing with scheduler for averaging.">
-      <change afterPath="$PROJECT_DIR$/model_framework/models/hybrid/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model_framework/models/hybrid/frequency_feedback.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model_framework/models/hybrid/hybrid_averaging.py" afterDir="false" />
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Implementing hybrid-model prediction methods.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/model_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/torch_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/hybrid/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/hybrid/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/hybrid/hybrid_averaging.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/hybrid/hybrid_averaging.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/master_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/master_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostCV_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/xgboost/XGBoostTTV_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing.py" afterDir="false" />
     </list>
@@ -100,22 +102,8 @@
       <workItem from="1719147969485" duration="2153000" />
       <workItem from="1719244739113" duration="9201000" />
       <workItem from="1719342643388" duration="428000" />
-    </task>
-    <task id="LOCAL-00010" summary="Removed old models.">
-      <option name="closed" value="true" />
-      <created>1718308410044</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1718308410044</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Restructured directories.">
-      <option name="closed" value="true" />
-      <created>1718308569760</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1718308569760</updated>
+      <workItem from="1719346245001" duration="42000" />
+      <workItem from="1719396629509" duration="6440000" />
     </task>
     <task id="LOCAL-00012" summary="Updated commit.">
       <option name="closed" value="true" />
@@ -493,7 +481,23 @@
       <option name="project" value="LOCAL" />
       <updated>1719145475281</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1719346262835</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1719346262835</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Implementing hybrid-model prediction methods.">
+      <option name="closed" value="true" />
+      <created>1719346282265</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1719346282265</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -511,7 +515,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Modified structure.&#10;Added additional automated testing features." />
     <MESSAGE value="Implemented one-hot encoded holidays." />
     <MESSAGE value="Initial implementation of TorchLSTM_v1 model." />
     <MESSAGE value="Updated to include TorchLSTM_v1." />
@@ -534,9 +537,10 @@
     <MESSAGE value="Added experimentation file." />
     <MESSAGE value="Updated testing framework." />
     <MESSAGE value="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets)." />
-    <MESSAGE value="Updated commit." />
     <MESSAGE value="Initial testing with scheduler for averaging." />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial testing with scheduler for averaging." />
+    <MESSAGE value="Updated commit." />
+    <MESSAGE value="Implementing hybrid-model prediction methods." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implementing hybrid-model prediction methods." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
