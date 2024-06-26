@@ -65,6 +65,7 @@ def data_datetime_sort(dataframe: pd.DataFrame, datetime_name: str, verbose=True
 #   Not asserted.
 def data_create_features(dataframe: pd.DataFrame, datetime_name: str, value_name: str,
                          days_since_start=False,
+                         minutes=False,
                          hours=False,
                          days_of_week=False,
                          days_of_week_onehot=False,
@@ -109,6 +110,11 @@ def data_create_features(dataframe: pd.DataFrame, datetime_name: str, value_name
                                              - dataframe_new[datetime_name].iloc[0]).dt.days.astype(int)
         column_dict['days_since_start'] = "days_since_start"
 
+    # Minutes (interpreted as minute of the hour):
+    if minutes:
+        dataframe_new["minute_of_hour"] = dataframe_new[datetime_name].dt.strftime("%M").astype(int)
+        column_dict["minutes"] = "minute_of_hour"
+
     # Hours (interpreted as hour of the day):
     if hours:
         dataframe_new["hour_of_day"] = dataframe_new[datetime_name].dt.strftime("%H").astype(int)
@@ -120,7 +126,22 @@ def data_create_features(dataframe: pd.DataFrame, datetime_name: str, value_name
         column_dict["days_of_week"] = "day_of_week"
     # Days of week (one-hot encoded):
     if days_of_week_onehot:
-        raise NotImplementedError
+        # Monday through Sunday as masked columns:
+        dataframe_new["day_monday"] = dataframe_new["day_of_week"] == 1
+        dataframe_new["day_tuesday"] = dataframe_new["day_of_week"] == 2
+        dataframe_new["day_wednesday"] = dataframe_new["day_of_week"] == 3
+        dataframe_new["day_thursday"] = dataframe_new["day_of_week"] == 4
+        dataframe_new["day_friday"] = dataframe_new["day_of_week"] == 5
+        dataframe_new["day_saturday"] = dataframe_new["day_of_week"] == 6
+        dataframe_new["day_sunday"] = dataframe_new["day_of_week"] == 7
+
+        column_dict["monday"] = "day_monday"
+        column_dict["tuesday"] = "day_tuesday"
+        column_dict["wednesday"] = "day_wednesday"
+        column_dict["thusday"] = "day_thursday"
+        column_dict["friday"] = "day_friday"
+        column_dict["saturday"] = "day_saturday"
+        column_dict["sunday"] = "day_sunday"
 
     # Weeks of the year:
     if weeks:
@@ -165,6 +186,7 @@ def data_create_features(dataframe: pd.DataFrame, datetime_name: str, value_name
     if verbose:
         print(f"Created time-series features for the DataFrame: \n"
               f"    {column_dict}")
+        print(dataframe_new)
 
     return dataframe_new, column_dict
 
