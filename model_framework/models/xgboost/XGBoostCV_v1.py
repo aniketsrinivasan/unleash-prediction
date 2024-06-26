@@ -48,7 +48,7 @@ class XGBoostCV_v1:
         self.scores = None
         self.predictions = None
 
-    def train(self):
+    def train(self, epochs=None):
         """
         Trains the XGBoostRegressor model with cross-validation according to hyperparameters defined.
 

@@ -41,7 +41,7 @@ class XGBoostTTV_v1:
             self.regressor = xgb.XGBRegressor(**self.__kwargs_hyperparams)
             self.regressor.load_model(read_from_stub)
 
-    def train(self):
+    def train(self, epochs=None):
         """
         Trains the XGBoostRegressor model on all (training) data according to hyperparameters defined.
 
