@@ -53,7 +53,7 @@ __kwargs_timeseries_init = dict(
     kwargs_lags=__kwargs_lags,
     kwargs_last_n=__kwargs_last_n,
     kwargs_prepare_future=__kwargs_timeseries_future,
-    verbose=True,
+    verbose=False,
 )
 # ==================================================================
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,6 +86,12 @@ def main():
     #         so the predictive power can really extend as far as necessary
     #   note: each interval would need its own trained LSTM model
     # hour-wise predictions can be fed into XGBoost as a feature, in order to predict minute-wise.
+
+    # modify TimeSeries.prepare_for_forecast() such that it only takes in max(max_lag, __lookback)
+    #   inputs for the TimeSeries (this is for efficiency).
+
+    # make __lookback dynamically accessible by all the code here. it's really annoying to have to deal with
+    #   not being able to immediately access it, and having to import it from TorchLSTM_v2.
 
     time_series = TimeSeries(**__kwargs_timeseries_init)
     time_series.prepare_from_scratch()

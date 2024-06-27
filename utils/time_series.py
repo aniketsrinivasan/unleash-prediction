@@ -84,6 +84,8 @@ class TimeSeries:
             df_split_train:         {None if (self.df_split_train is None) else self.df_split_train.shape}
             df_split_test:          {None if (self.df_split_test is None) else self.df_split_test.shape}
             df_split_valid:         {None if (self.df_split_valid is None) else self.df_split_valid.shape}
+            
+            latest df_raw DateTime:        {self.df_raw[self.datetime_name].iloc[-1]}
         '''
         return string
 
@@ -310,6 +312,10 @@ class TimeSeries:
         # Only consider as many entries as necessary:
         if self.lag_max is not None:
             n_entries = max(self.lag_max, 500)  # NOTE: 500 needs to be __lookback.
+            # Getting last entries of df_raw AFTER sorting first:
+            self.df_raw = data_datetime_conversion(self.df_raw, self.datetime_name, self.datetime_format,
+                                                   verbose=self.verbose)
+            self.df_raw = data_datetime_sort(self.df_raw, self.datetime_name, verbose=self.verbose)
             self.df_raw = self.df_raw.iloc[-n_entries:]
 
         # Augment and store the raw data:
