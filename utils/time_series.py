@@ -106,7 +106,7 @@ class TimeSeries:
         """
         # If the data has already been augmented, do not augment again if override==False:
         if (self.df_augmented is not None) and (override is False) and (update_self is True):
-            print(f"Override is set to False, and an existing augmented dataframe exists.")
+            print(f"Override is set to False, and an existing augmented DataFrame exists.")
             print(f"Aborting data augmentation.")
             return
 
@@ -163,7 +163,7 @@ class TimeSeries:
             self.features = list(features.values())
             self.lags = lags
             self.lag_min = lag_min
-            return
+            return df_augmented, features, lags, lag_min
         else:
             return df_augmented, features, lags, lag_min
 
@@ -242,7 +242,7 @@ class TimeSeries:
         if update_self:
             self.df_future_only = df_future_only
             self.df_future_concat = df_future_concat
-            return
+            return df_future_only, df_future_concat
         else:
             return df_future_only, df_future_concat
 
@@ -251,7 +251,7 @@ class TimeSeries:
         if kwargs_last_n is None:
             kwargs_last_n = self.kwargs_last_n
         # Setting df_last_n, df_split_train_last_n, df_split_test_last_n:
-        #   note: data_get_last_n() already checks if dataframe is None.
+        #   note: data_get_last_n() already checks if DataFrame is None.
         #         If so, it simply returns None.
         self.df_last_n = data_get_last_n(dataframe=self.df_augmented, verbose=self.verbose,
                                          **kwargs_last_n)
@@ -302,6 +302,21 @@ class TimeSeries:
 
     def prepare_for_forecast(self, kwargs_last_n=None, split_ratio=None, kwargs_features=None,
                              kwargs_lags=None, kwargs_prepare_future=None):
+        """
+        Prepares the TimeSeries object for forecasting, skipping any unnecessary steps (such as
+        data train/test/valid splitting), and including optimizations (such as dataset size optimization)
+        to speed up critical augmentation processes.
+
+        Consumes the same kwargs as passed in prepare_from_scratch. Does not use kwargs_last_n or
+        split_ratio.
+
+        :param kwargs_last_n:           unused, present for standardization purposes.
+        :param split_ratio:             unused, present for standardization purposes.
+        :param kwargs_features:         features as kwargs.
+        :param kwargs_lags:             lags as kwargs.
+        :param kwargs_prepare_future:   future dataset preparation as kwargs.
+        :return:                        None.
+        """
         if kwargs_features is None:
             kwargs_features = self.kwargs_features
         if kwargs_lags is None:
@@ -319,7 +334,8 @@ class TimeSeries:
             self.df_raw = self.df_raw.iloc[-n_entries:]
 
         # Augment and store the raw data:
-        self.df_augment(override=True, kwargs_features=kwargs_features, kwargs_lags=kwargs_lags)
+        self.df_augment(update_self=True, override=True, kwargs_features=kwargs_features,
+                        kwargs_lags=kwargs_lags)
         # Create and store future (both "only" and "concat") datasets:
         self.df_create_future(**kwargs_prepare_future,
                               kwargs_features=kwargs_features, kwargs_lags=kwargs_lags)
