@@ -27,8 +27,8 @@ __models_init_dict = {
 
 __kwargs_averaging = dict(
     isolate="Prediction_TorchLSTM_v2",
-    ceil_floor_values=(0.7, 0.0),
-    smooth_ratio=0.5,
+    ceil_floor_values=(0.3, 0.0),
+    smooth_ratio=0.4,
 )
 
 

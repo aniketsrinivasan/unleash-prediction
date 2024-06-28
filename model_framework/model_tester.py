@@ -1,4 +1,5 @@
-from .models import (MasterModel, TorchLSTM_v2_LOOKBACK)
+from macros import TorchLSTM_v2_LOOKBACK
+from .models import MasterModel
 from utils import TimeSeries
 import matplotlib.pyplot as plt
 # Idea: test and compare various model_framework easily.

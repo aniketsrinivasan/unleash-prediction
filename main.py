@@ -1,11 +1,10 @@
+import matplotlib.pyplot as plt
 from model_framework import *
 from utils import TimeSeries
-import matplotlib.pyplot as plt
-import requests
+from macros import TorchLSTM_v2_LOOKBACK
 
 # ~~~~~~~~~~~~~~~~~ HYPERPARAMETERS AND OTHER INFO ~~~~~~~~~~~~~~~~~
 #                           FOR THE USER
-__PATH = "/Users/aniket/PycharmProjects/unleashPredictions"
 # =========================  PARAMETERS  ===========================
 # Initialization parameters for TimeSeries future preparation:
 __kwargs_timeseries_future = dict(
@@ -44,7 +43,7 @@ __kwargs_last_n = dict(
 )
 
 __kwargs_timeseries_init = dict(
-    csv_path=f"{__PATH}/energy_data.csv",
+    csv_path=f"energy_data.csv",
     datetime_name="Datetime",
     datetime_format="%Y-%m-%d %H:%M:%S",
     value_name="PJMW_MW",
@@ -53,7 +52,7 @@ __kwargs_timeseries_init = dict(
     kwargs_lags=__kwargs_lags,
     kwargs_last_n=__kwargs_last_n,
     kwargs_prepare_future=__kwargs_timeseries_future,
-    verbose=False,
+    verbose=True,
 )
 # ==================================================================
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -99,7 +98,7 @@ def main():
     print(time_series.value_name)
 
     model = MasterModel(time_series, "TorchLSTM_v2",
-                        read_from_stub="/Users/aniket/PycharmProjects/unleashPredictions/model_framework/models/LSTM/saved_models/lstm_5",
+                        read_from_stub="model_framework/models/LSTM/saved_models/lstm_energy_data_500",
                         write_to_stub=None,
                         is_trained=True)
     model.model_create()

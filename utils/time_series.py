@@ -1,4 +1,5 @@
 from .dataset_utils import *
+from macros import TorchLSTM_v2_LOOKBACK
 
 
 class TimeSeries:
@@ -326,7 +327,7 @@ class TimeSeries:
 
         # Only consider as many entries as necessary:
         if self.lag_max is not None:
-            n_entries = max(self.lag_max, 500)  # NOTE: 500 needs to be __lookback.
+            n_entries = max(self.lag_max, TorchLSTM_v2_LOOKBACK)
             # Getting last entries of df_raw AFTER sorting first:
             self.df_raw = data_datetime_conversion(self.df_raw, self.datetime_name, self.datetime_format,
                                                    verbose=self.verbose)

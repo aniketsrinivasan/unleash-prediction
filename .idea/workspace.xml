@@ -4,15 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated commit.">
-      <change afterPath="$PROJECT_DIR$/model_framework/models/mamba/Mamba_v1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/tests/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/tests/test_data.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/tests/test_dataset_utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/tests/test_time_series.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/dataset_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_utils.py" afterDir="false" />
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="NotImplemented: Mamba forecasting.">
+      <change afterPath="$PROJECT_DIR$/macros/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/macros/macros.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_framework/models/LSTM/deprecated/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/model_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/deprecated/TorchLSTM_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_framework/models/hybrid/hybrid_averaging.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/hybrid/hybrid_averaging.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,8 +26,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="Setup Script" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -64,11 +67,11 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/macros" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/model_framework/models/LSTM/deprecated" />
       <recent name="$PROJECT_DIR$/testing_framework" />
       <recent name="$PROJECT_DIR$/model_framework/models/deprecated" />
-      <recent name="$PROJECT_DIR$/utils/deprecated" />
-      <recent name="$PROJECT_DIR$/model_framework/models" />
     </key>
   </component>
   <component name="RunManager">
@@ -132,55 +135,7 @@
       <workItem from="1719409225189" duration="5299000" />
       <workItem from="1719425301956" duration="3549000" />
       <workItem from="1719501867210" duration="107000" />
-      <workItem from="1719515379540" duration="10687000" />
-    </task>
-    <task id="LOCAL-00026" summary="Initial implementation of TorchLSTM_v1 model.">
-      <option name="closed" value="true" />
-      <created>1718822240294</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1718822240294</updated>
-    </task>
-    <task id="LOCAL-00027" summary="Updated README.">
-      <option name="closed" value="true" />
-      <created>1718822334986</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1718822334986</updated>
-    </task>
-    <task id="LOCAL-00028" summary="Updated commit.">
-      <option name="closed" value="true" />
-      <created>1718822366353</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1718822366353</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Updated to include TorchLSTM_v1.">
-      <option name="closed" value="true" />
-      <created>1718909842540</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1718909842541</updated>
-    </task>
-    <task id="LOCAL-00030" summary="Implemented TorchLSTM_v1 (LSTM model).">
-      <option name="closed" value="true" />
-      <created>1718909856554</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1718909856554</updated>
-    </task>
-    <task id="LOCAL-00031" summary="Updated commit.">
-      <option name="closed" value="true" />
-      <created>1718909869636</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1718909869636</updated>
+      <workItem from="1719515379540" duration="12874000" />
     </task>
     <task id="LOCAL-00032" summary="Testing TorchLSTM_v1.">
       <option name="closed" value="true" />
@@ -526,7 +481,55 @@
       <option name="project" value="LOCAL" />
       <updated>1719501922326</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="Added requirements.txt.">
+      <option name="closed" value="true" />
+      <created>1719580990472</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1719580990472</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Added unit-testing for dataset_utils and TimeSeries.">
+      <option name="closed" value="true" />
+      <created>1719581023655</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1719581023655</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Minor bug fixes (error handling, future creation).">
+      <option name="closed" value="true" />
+      <created>1719581062827</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1719581062827</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Added unit-testing.">
+      <option name="closed" value="true" />
+      <created>1719581078897</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1719581078897</updated>
+    </task>
+    <task id="LOCAL-00079" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1719581089657</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1719581089657</updated>
+    </task>
+    <task id="LOCAL-00080" summary="NotImplemented: Mamba forecasting.">
+      <option name="closed" value="true" />
+      <created>1719581105748</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1719581105748</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -544,11 +547,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Deprecated." />
-    <MESSAGE value="Overhauled implementation of TimeSeries and dataset_utils." />
-    <MESSAGE value="Modified kwargs and overall implementation." />
-    <MESSAGE value="Information about model implementations." />
-    <MESSAGE value="Modified implementation of data_split_train_test_valid() to allow optional splits. &#10;&#10;Modified data_get_last_n() to allow None DataFrames." />
     <MESSAGE value="Modified implementation to include read_from_stub and write_to_stub." />
     <MESSAGE value="Deprecated files." />
     <MESSAGE value="Significant overhaul of underlying framework to better support LSTM models." />
@@ -568,14 +566,19 @@
     <MESSAGE value="Slightly modified the way predictions are padded, and how many predictions are made.&#10;&#10;Before: predictions of set size, rest are 0.&#10;&#10;Now: predictions of size (minimum of __lookback and df_future_only.shape[0]), rest are 0." />
     <MESSAGE value="Implemented saving/loading models from file." />
     <MESSAGE value="Optimized usage of lag_max and minimizing dataset to speed up forecasting from ~3.2s to ~1.3s." />
+    <MESSAGE value="Added requirements.txt." />
+    <MESSAGE value="Added unit-testing for dataset_utils and TimeSeries." />
+    <MESSAGE value="Minor bug fixes (error handling, future creation)." />
+    <MESSAGE value="Added unit-testing." />
     <MESSAGE value="Updated commit." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated commit." />
+    <MESSAGE value="NotImplemented: Mamba forecasting." />
+    <option name="LAST_COMMIT_MESSAGE" value="NotImplemented: Mamba forecasting." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py</url>
+          <url>file://$PROJECT_DIR$/model_framework/models/LSTM/deprecated/TorchLSTM_v1.py</url>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

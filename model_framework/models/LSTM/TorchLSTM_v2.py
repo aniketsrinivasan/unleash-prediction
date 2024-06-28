@@ -5,11 +5,16 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import os
 from utils import TimeSeries
+from macros import TorchLSTM_v2_LOOKBACK
 
 
-# Hyperparameters set to a global scope for ease of access when modifying:
-TorchLSTM_v2_LOOKBACK = 500        # number of inputs (do not modify unless re-training)
-TorchLSTM_v2_N_FUTURE = 500         # number of predictions (safe to modify)
+# Hyperparameters:
+TorchLSTM_v2_N_FUTURE = 500        # number of predictions (safe to modify)
+if TorchLSTM_v2_N_FUTURE > TorchLSTM_v2_LOOKBACK:
+    print(f"SoftWarn: TorchLSTM_v2_N_FUTURE is greater than TorchLSTM_v2_LOOKBACK. \n"
+          f"    N_FUTURE:   {TorchLSTM_v2_N_FUTURE} \n"
+          f"    LOOKBACK:   {TorchLSTM_v2_LOOKBACK} \n"
+          f"Consider modifying N_FUTURE for more accurate predictions.")
 
 
 class BaseLSTM_v2(nn.Module):

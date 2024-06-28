@@ -1,5 +1,5 @@
 import pandas as pd
-from ..LSTM import TorchLSTM_v2_LOOKBACK
+from macros import TorchLSTM_v2_LOOKBACK
 from utils import TimeSeries
 from ...models import MasterModel
 
