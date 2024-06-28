@@ -1,6 +1,7 @@
 import pandas as pd
 import math
 import holidays
+import os
 
 
 # This module contains functions that use Pandas, Math and (Holidays) to modify data.
@@ -9,7 +10,7 @@ import holidays
 
 
 # data_read_csv() requires that "path" contains a .csv file. Not asserted.
-def data_read_csv(path: str, verbose=True) -> pd.DataFrame:
+def data_read_csv(path: str, verbose: bool = True) -> pd.DataFrame:
     """
     Reads data from a .csv file and returns it as a pd.DataFrame.
 
@@ -19,6 +20,11 @@ def data_read_csv(path: str, verbose=True) -> pd.DataFrame:
     """
     if verbose:
         print(f"Read file from {path} into a DataFrame.")
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"{path} does not exist.")
+    if not path.endswith(".csv"):
+        raise FileNotFoundError(f"{path} is not a .csv file.")
+
     return pd.read_csv(path)
 
 
@@ -58,6 +64,9 @@ def data_datetime_sort(dataframe: pd.DataFrame, datetime_name: str, verbose=True
         raise KeyError(f"Could not find DateTime column {datetime_name}.")
     dataframe_new = dataframe.copy()
     dataframe_new = dataframe_new.sort_values([datetime_name], ascending=[True])
+    if verbose:
+        print(f"Sorted DataFrame: \n")
+        print(dataframe_new)
     return dataframe_new
 
 
@@ -86,6 +95,7 @@ def data_create_features(dataframe: pd.DataFrame, datetime_name: str, value_name
     :param datetime_name:       name of the DateTime column in dataframe.
     :param value_name:          name of the Target column in dataframe.
     :param days_since_start:    add the "days_since_start" feature (acts like an index count).
+    :param minutes:             add the "minutes" feature.
     :param hours:               add the "hour" feature.
     :param days_of_week:        add the "day of the week" feature (NOT one-hot encoded).
     :param days_of_week_onehot: add features for "days of the week" that are one-hot encoded.
@@ -304,9 +314,11 @@ def data_create_future(dataframe, datetime_name: str, value_name: str,
     last_date = dataframe_new[datetime_name].iloc[-1]
 
     # Creating a new dataframe starting at the last date, stepping by step, with window_size size:
-    future = pd.date_range(last_date, periods=window_size, freq=step)
-    future_dataframe = pd.DataFrame({datetime_name: future})
-    # Initializing the value_name to 0:
+    #   we go to window_size+1 and initialize the DataFrame using future[1:] since the 0th index has the
+    #   current pd.Timestamp (not the first future value).
+    future = pd.date_range(last_date, periods=window_size+1, freq=step)
+    future_dataframe = pd.DataFrame({datetime_name: future[1:]})
+    # Initializing the Target column to 0:
     future_dataframe[value_name] = 0
 
     if append:
