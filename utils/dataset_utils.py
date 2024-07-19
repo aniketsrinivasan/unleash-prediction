@@ -45,7 +45,14 @@ def data_datetime_conversion(dataframe: pd.DataFrame, datetime_name: str,
     if datetime_name not in dataframe.columns:
         raise IndexError(f"Could not find DateTime column {datetime_name}.")
     dataframe_new = dataframe.copy()
-    dataframe_new[datetime_name] = pd.to_datetime(dataframe_new[datetime_name], format=datetime_format)
+    # If "Unix" is provided, pass "s" into the format for pd.to_datetime:
+    if datetime_format == "Unix":
+        datetime_format = None
+        datetime_unit = "s"
+    else:
+        datetime_unit = None
+    dataframe_new[datetime_name] = pd.to_datetime(dataframe_new[datetime_name], format=datetime_format,
+                                                  unit=datetime_unit)
     return dataframe_new
 
 
@@ -136,6 +143,8 @@ def data_create_features(dataframe: pd.DataFrame, datetime_name: str, value_name
         column_dict["days_of_week"] = "day_of_week"
     # Days of week (one-hot encoded):
     if days_of_week_onehot:
+        if not days_of_week:
+            raise ValueError(f"One-hot encoded days of week require days_of_week=True.")
         # Monday through Sunday as masked columns:
         dataframe_new["day_monday"] = dataframe_new["day_of_week"] == 1
         dataframe_new["day_tuesday"] = dataframe_new["day_of_week"] == 2
@@ -347,8 +356,7 @@ def data_get_last_n(dataframe: pd.DataFrame, window_base=1, window_multiple=None
     if verbose:
         print(f"Getting last {window_base * window_multiple} entries from the provided DataFrame.")
     if dataframe is None:
-        print(f"SoftWarm: Trying to create last_n on a None DataFrame. Returning None.")
-        return
+        raise ValueError(f"SoftWarm: Trying to create last_n on a None DataFrame. Returning None.")
     if window_base * window_multiple > dataframe.shape[0]:
         print(f"SortWarn: Trying to get {window_base * window_multiple} from a DataFrame of size "
               f"{dataframe.shape[0]}. Returning the entire DataFrame.")
