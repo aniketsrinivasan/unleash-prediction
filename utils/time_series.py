@@ -301,8 +301,30 @@ class TimeSeries:
         self.df_create_last_n(kwargs_last_n=kwargs_last_n)
         return
 
+    def prepare_for_validation(self, kwargs_features=None, kwargs_lags=None, is_sorted=False):
+        if kwargs_features is None:
+            kwargs_features = self.kwargs_features
+        if kwargs_lags is None:
+            kwargs_lags = self.kwargs_lags
+
+        validation_size = int(self.split_ratio[2] * self.df_raw.shape[0])
+        if self.lag_max is not None:
+            # We only consider the raw data to be the last (lag_max+validation_size) entries:
+            n_entries = int((max(self.lag_max, TorchLSTM_v2_LOOKBACK) + validation_size))
+            self.df_raw = data_datetime_conversion(self.df_raw, self.datetime_name, self.datetime_format,
+                                                   verbose=self.verbose)
+            if not is_sorted:
+                self.df_raw = data_datetime_sort(self.df_raw, self.datetime_name, verbose=self.verbose)
+            self.df_raw = self.df_raw.iloc[-n_entries:]
+
+        # Augment and store the raw data:
+        self.df_augment(update_self=True, override=True, kwargs_features=kwargs_features,
+                        kwargs_lags=kwargs_lags)
+        self.df_split_valid = self.df_augmented.iloc[-validation_size:]
+        return
+
     def prepare_for_forecast(self, kwargs_last_n=None, split_ratio=None, kwargs_features=None,
-                             kwargs_lags=None, kwargs_prepare_future=None):
+                             kwargs_lags=None, kwargs_prepare_future=None, is_sorted=False):
         """
         Prepares the TimeSeries object for forecasting, skipping any unnecessary steps (such as
         data train/test/valid splitting), and including optimizations (such as dataset size optimization)
@@ -316,6 +338,7 @@ class TimeSeries:
         :param kwargs_features:         features as kwargs.
         :param kwargs_lags:             lags as kwargs.
         :param kwargs_prepare_future:   future dataset preparation as kwargs.
+        :param is_sorted:               whether the DataFrame is already sorted in DateTime.
         :return:                        None.
         """
         if kwargs_features is None:
@@ -331,7 +354,8 @@ class TimeSeries:
             # Getting last entries of df_raw AFTER sorting first:
             self.df_raw = data_datetime_conversion(self.df_raw, self.datetime_name, self.datetime_format,
                                                    verbose=self.verbose)
-            self.df_raw = data_datetime_sort(self.df_raw, self.datetime_name, verbose=self.verbose)
+            if not is_sorted:
+                self.df_raw = data_datetime_sort(self.df_raw, self.datetime_name, verbose=self.verbose)
             self.df_raw = self.df_raw.iloc[-n_entries:]
 
         # Augment and store the raw data:
