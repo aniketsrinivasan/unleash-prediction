@@ -4,18 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="NotImplemented: Mamba forecasting.">
-      <change afterPath="$PROJECT_DIR$/macros/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/macros/macros.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model_framework/models/LSTM/deprecated/__init__.py" afterDir="false" />
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Deprecated TorchLSTM_v1 in favor of TorchLSTM_v2.">
+      <change afterPath="$PROJECT_DIR$/dataset.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dataset_short.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_framework/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/model_tester.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/deprecated/TorchLSTM_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/TorchLSTM_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/LSTM/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/models/hybrid/hybrid_averaging.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/models/hybrid/hybrid_averaging.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/dataset_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,25 +42,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.Python tests for test_dataset_utils.test_data_get_last_n_valid.executor": "Coverage",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/aniket/PycharmProjects/unleashPredictions/utils/tests",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.Python tests for test_dataset_utils.test_data_get_last_n_valid.executor&quot;: &quot;Coverage&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/aniket/PycharmProjects/unleashPredictions&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/utils/tests" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/utils/tests" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/macros" />
@@ -135,31 +131,10 @@
       <workItem from="1719409225189" duration="5299000" />
       <workItem from="1719425301956" duration="3549000" />
       <workItem from="1719501867210" duration="107000" />
-      <workItem from="1719515379540" duration="12874000" />
-    </task>
-    <task id="LOCAL-00032" summary="Testing TorchLSTM_v1.">
-      <option name="closed" value="true" />
-      <created>1718909878803</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1718909878803</updated>
-    </task>
-    <task id="LOCAL-00033" summary="Updated implementation.">
-      <option name="closed" value="true" />
-      <created>1718909888016</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1718909888016</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Updated commit.">
-      <option name="closed" value="true" />
-      <created>1718909894584</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1718909894584</updated>
+      <workItem from="1719515379540" duration="16342000" />
+      <workItem from="1719927136741" duration="2614000" />
+      <workItem from="1721389732891" duration="1532000" />
+      <workItem from="1721391848493" duration="6171000" />
     </task>
     <task id="LOCAL-00035" summary="Updated README.">
       <option name="closed" value="true" />
@@ -529,7 +504,31 @@
       <option name="project" value="LOCAL" />
       <updated>1719581105748</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="Added macros to avoid circular dependencies.">
+      <option name="closed" value="true" />
+      <created>1719583194502</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1719583194502</updated>
+    </task>
+    <task id="LOCAL-00082" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1719583214359</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1719583214359</updated>
+    </task>
+    <task id="LOCAL-00083" summary="Deprecated TorchLSTM_v1 in favor of TorchLSTM_v2.">
+      <option name="closed" value="true" />
+      <created>1719583229956</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1719583229956</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -547,8 +546,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Modified implementation to include read_from_stub and write_to_stub." />
-    <MESSAGE value="Deprecated files." />
     <MESSAGE value="Significant overhaul of underlying framework to better support LSTM models." />
     <MESSAGE value="Updated LSTM models." />
     <MESSAGE value="Added experimentation file." />
@@ -570,9 +567,11 @@
     <MESSAGE value="Added unit-testing for dataset_utils and TimeSeries." />
     <MESSAGE value="Minor bug fixes (error handling, future creation)." />
     <MESSAGE value="Added unit-testing." />
-    <MESSAGE value="Updated commit." />
     <MESSAGE value="NotImplemented: Mamba forecasting." />
-    <option name="LAST_COMMIT_MESSAGE" value="NotImplemented: Mamba forecasting." />
+    <MESSAGE value="Added macros to avoid circular dependencies." />
+    <MESSAGE value="Updated commit." />
+    <MESSAGE value="Deprecated TorchLSTM_v1 in favor of TorchLSTM_v2." />
+    <option name="LAST_COMMIT_MESSAGE" value="Deprecated TorchLSTM_v1 in favor of TorchLSTM_v2." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
