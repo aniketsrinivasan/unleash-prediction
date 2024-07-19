@@ -33,15 +33,15 @@ __kwargs_averaging = dict(
 
 
 def main():
-    # tester = ModelTester(kwargs_timeseries_init=__kwargs_timeseries_init,
-    #                      models_init=__models_init_dict)
-    # tester.create_model_dict()
-    # tester.run_training()
-    # tester.run_validation()
-    # tester.get_validation_losses()
-    # tester.plot_validation_losses()
-    # tester.plot_validation_mean()
-    # tester.plot_validation_scheduler(isolate_model="TorchLSTM_v2")
+    tester = ModelTester(kwargs_timeseries_init=__kwargs_timeseries_init,
+                         models_init=__models_init_dict)
+    tester.create_model_dict()
+    tester.run_training()
+    tester.run_validation()
+    tester.get_validation_losses()
+    tester.plot_validation_losses()
+    tester.plot_validation_mean()
+    tester.plot_validation_scheduler(isolate_model="TorchLSTM_v2")
 
     start_time = time.time()
     time_series = utils.TimeSeries(**__kwargs_timeseries_init)

@@ -185,9 +185,9 @@ class ModelTester:
         return
 
     def plot_validation_scheduler(self, isolate_model: str):
-        start_value = 0.6
+        start_value = 0.3
         end_value = 0.0
-        smooth_window_ratio = 0.5
+        smooth_window_ratio = 0.4
 
         if self.combined_validation_df is None:
             combined_df = self.time_series.df_split_valid[[self.time_series.datetime_name,

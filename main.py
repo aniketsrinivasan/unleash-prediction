@@ -8,14 +8,14 @@ from macros import TorchLSTM_v2_LOOKBACK
 # =========================  PARAMETERS  ===========================
 # Initialization parameters for TimeSeries future preparation:
 __kwargs_timeseries_future = dict(
-    window_size=24*7,
-    step_size="1h",
+    window_size=60*24,
+    step_size="1min",
 )
 
 # =======================  HYPERPARAMETERS  ========================
 # Arguments to modify the creation of time-series features:
 __kwargs_features = dict(
-    minutes=False,
+    minutes=True,
     hours=True,
     days_of_week=True,
     days_of_week_onehot=True,
@@ -23,13 +23,13 @@ __kwargs_features = dict(
     days_of_month=True,
     months=True,
     rolling_windows=[100],
-    holidays_country=None,
+    holidays_country="IND",
     holidays_province=None,
 )
 # Arguments to modify the lag values created as features:
-__lag_base = 24*7
-__lag_multiples = [6, 12]
-__lag_label = "m"
+__lag_base = 60*24*7
+__lag_multiples = [1, 2, 3, 4, 5]
+__lag_label = "w"
 __kwargs_lags = dict(
     lag_base=__lag_base,
     lag_multiples=__lag_multiples,
@@ -43,11 +43,11 @@ __kwargs_last_n = dict(
 )
 
 __kwargs_timeseries_init = dict(
-    csv_path=f"energy_data.csv",
+    csv_path=f"dataset.csv",
     datetime_name="Datetime",
-    datetime_format="%Y-%m-%d %H:%M:%S",
-    value_name="PJMW_MW",
-    split_ratio=[0.7, 0.299, 0.001],
+    datetime_format="Unix",
+    value_name="Target",
+    split_ratio=[0.9, 0.01, 0.09],
     kwargs_features=__kwargs_features,
     kwargs_lags=__kwargs_lags,
     kwargs_last_n=__kwargs_last_n,
@@ -86,20 +86,14 @@ def main():
     #   note: each interval would need its own trained LSTM model
     # hour-wise predictions can be fed into XGBoost as a feature, in order to predict minute-wise.
 
-    # modify TimeSeries.prepare_for_forecast() such that it only takes in max(max_lag, __lookback)
-    #   inputs for the TimeSeries (this is for efficiency).
-
-    # make __lookback dynamically accessible by all the code here. it's really annoying to have to deal with
-    #   not being able to immediately access it, and having to import it from TorchLSTM_v2.
-
     time_series = TimeSeries(**__kwargs_timeseries_init)
-    time_series.prepare_from_scratch()
+    time_series.prepare_for_validation(is_sorted=True)
     print(time_series)
     print(time_series.value_name)
 
-    model = MasterModel(time_series, "TorchLSTM_v2",
-                        read_from_stub="model_framework/models/LSTM/saved_models/lstm_energy_data_500",
-                        write_to_stub=None,
+    model = MasterModel(time_series, "XGBoostTTV_v1",
+                        read_from_stub="model_framework/models/xgboost/saved_models/xgboost_ttv_financial_1.ubj",
+                        write_to_stub="model_framework/models/xgboost/saved_models/xgboost_ttv_financial_1.ubj",
                         is_trained=True)
     model.model_create()
     model.model_train()
