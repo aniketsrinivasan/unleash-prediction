@@ -1,6 +1,6 @@
 from .xgboost import (XGBoostTTV_v1, XGBoostCV_v1)
 from .model_utils import validation_loss
-from utils import TimeSeries
+from utils import TimeSeries, log_info
 from .LSTM import (TorchLSTM_v1, TorchLSTM_v2)
 
 
@@ -59,6 +59,7 @@ class MasterModel:
 
         return
 
+    @log_info(log_path="logs/log_main", log_enabled=True)
     def model_train(self):
         """
         Trains the model stored in self.model. Requires that self.create() has been run.
@@ -75,6 +76,7 @@ class MasterModel:
         self.is_trained = True
         return self.model.train()
 
+    @log_info(log_path="logs/log_main", log_enabled=True)
     def model_incremental_train(self):
         """
         Runs incremental training on an existing Model (loaded from self.read_from_stub) on a low

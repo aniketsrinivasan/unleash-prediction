@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from sklearn.metrics import *
 import numpy as np
+from utils import log_info
 
 
 def validation_loss(model, loss_function="mean_squared_error", verbose=True):

@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Deprecated TorchLSTM_v1 in favor of TorchLSTM_v2.">
-      <change afterPath="$PROJECT_DIR$/dataset.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dataset_short.csv" afterDir="false" />
+    <list default="true" id="d7417975-9dd7-497c-9eb0-7f38452d4ab1" name="Changes" comment="Updated commit.">
+      <change afterPath="$PROJECT_DIR$/utils/decorators.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_framework/model_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_framework/model_tester.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/dataset_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/time_series.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/time_series.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,47 +128,9 @@
       <workItem from="1719515379540" duration="16342000" />
       <workItem from="1719927136741" duration="2614000" />
       <workItem from="1721389732891" duration="1532000" />
-      <workItem from="1721391848493" duration="6171000" />
-    </task>
-    <task id="LOCAL-00035" summary="Updated README.">
-      <option name="closed" value="true" />
-      <created>1718910027206</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1718910027206</updated>
-    </task>
-    <task id="LOCAL-00036" summary="Updated to-do.">
-      <option name="closed" value="true" />
-      <created>1718910147604</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1718910147605</updated>
-    </task>
-    <task id="LOCAL-00037" summary="Modified implementation of .predict() method.">
-      <option name="closed" value="true" />
-      <created>1718966547491</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1718966547491</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Updated validation_loss() to work with custom dataframes.">
-      <option name="closed" value="true" />
-      <created>1718966565715</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1718966565715</updated>
-    </task>
-    <task id="LOCAL-00039" summary="Deprecated.">
-      <option name="closed" value="true" />
-      <created>1718973564694</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1718973564694</updated>
+      <workItem from="1721391848493" duration="6917000" />
+      <workItem from="1721421685960" duration="1150000" />
+      <workItem from="1722601488954" duration="359000" />
     </task>
     <task id="LOCAL-00040" summary="Overhauled implementation of TimeSeries and dataset_utils.">
       <option name="closed" value="true" />
@@ -528,7 +484,47 @@
       <option name="project" value="LOCAL" />
       <updated>1719583229956</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="Added real financial datasets.">
+      <option name="closed" value="true" />
+      <created>1721398054068</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1721398054068</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Unix DateTime conversion.">
+      <option name="closed" value="true" />
+      <created>1721398075341</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1721398075341</updated>
+    </task>
+    <task id="LOCAL-00086" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1721398099034</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1721398099034</updated>
+    </task>
+    <task id="LOCAL-00087" summary="Fixed bugs, added validation preparation method (for optimised testing).">
+      <option name="closed" value="true" />
+      <created>1721398130031</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1721398130032</updated>
+    </task>
+    <task id="LOCAL-00088" summary="Updated commit.">
+      <option name="closed" value="true" />
+      <created>1721398178820</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1721398178820</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -546,9 +542,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Significant overhaul of underlying framework to better support LSTM models." />
-    <MESSAGE value="Updated LSTM models." />
-    <MESSAGE value="Added experimentation file." />
     <MESSAGE value="Updated testing framework." />
     <MESSAGE value="Implemented TorchLSTM_v2 model. Differs from TorchLSTM_v1 by implementing recursive (multi-step) prediction and batch-wise training (for large datasets)." />
     <MESSAGE value="Initial testing with scheduler for averaging." />
@@ -569,9 +562,12 @@
     <MESSAGE value="Added unit-testing." />
     <MESSAGE value="NotImplemented: Mamba forecasting." />
     <MESSAGE value="Added macros to avoid circular dependencies." />
-    <MESSAGE value="Updated commit." />
     <MESSAGE value="Deprecated TorchLSTM_v1 in favor of TorchLSTM_v2." />
-    <option name="LAST_COMMIT_MESSAGE" value="Deprecated TorchLSTM_v1 in favor of TorchLSTM_v2." />
+    <MESSAGE value="Added real financial datasets." />
+    <MESSAGE value="Unix DateTime conversion." />
+    <MESSAGE value="Fixed bugs, added validation preparation method (for optimised testing)." />
+    <MESSAGE value="Updated commit." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated commit." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
